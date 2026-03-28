@@ -445,6 +445,52 @@
       font-size: 0.82rem;
     }
 
+    .code-block-wrapper {
+      position: relative;
+      margin: 8px 0;
+    }
+
+    .code-block-wrapper pre {
+      background: #0d0d14;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 14px 16px;
+      padding-top: 36px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: #cdd6f4;
+      white-space: pre;
+      word-break: normal;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 6px;
+      color: #a5b4fc;
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .copy-btn:hover {
+      background: rgba(99,102,241,0.35);
+      color: #fff;
+    }
+
+    .copy-btn.copied {
+      background: rgba(40,200,64,0.2);
+      border-color: rgba(40,200,64,0.4);
+      color: #28c840;
+    }
+
     .typing {
       display: flex;
       align-items: center;
@@ -651,6 +697,53 @@
       }
     });
 
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    function renderContent(text, isAI) {
+      if (!isAI) {
+        const span = document.createElement('span');
+        span.textContent = text;
+        return span;
+      }
+      const frag = document.createDocumentFragment();
+      const parts = text.split(/(```[\s\S]*?```)/g);
+      parts.forEach(part => {
+        if (part.startsWith('```') && part.endsWith('```')) {
+          const inner = part.slice(3, -3);
+          const firstLine = inner.indexOf('\n');
+          const code = firstLine !== -1 ? inner.slice(firstLine + 1) : inner;
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-block-wrapper';
+
+          const btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = 'Copy';
+          btn.onclick = () => {
+            navigator.clipboard.writeText(code).then(() => {
+              btn.textContent = 'Copied!';
+              btn.classList.add('copied');
+              setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+            });
+          };
+
+          const pre = document.createElement('pre');
+          pre.innerHTML = escapeHtml(code);
+
+          wrapper.appendChild(btn);
+          wrapper.appendChild(pre);
+          frag.appendChild(wrapper);
+        } else if (part) {
+          const span = document.createElement('span');
+          span.textContent = part;
+          frag.appendChild(span);
+        }
+      });
+      return frag;
+    }
+
     function addMessage(role, text) {
       const wrapper = document.createElement('div');
       wrapper.className = `msg ${role}`;
@@ -661,7 +754,7 @@
 
       const bubble = document.createElement('div');
       bubble.className = 'msg-bubble';
-      bubble.textContent = text;
+      bubble.appendChild(renderContent(text, role === 'ai'));
 
       wrapper.appendChild(avatar);
       wrapper.appendChild(bubble);

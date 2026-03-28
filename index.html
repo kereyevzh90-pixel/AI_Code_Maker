@@ -802,11 +802,11 @@
 
       try {
         const url = 'https://text.pollinations.ai/' +
-          encodeURIComponent(SYSTEM + '\n\nUser: ' + text + '\nAssistant:') +
-          '?model=openai-large';
+          encodeURIComponent(text) +
+          '?model=openai-large&system=' + encodeURIComponent(SYSTEM);
         const response = await fetch(url);
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        const reply = (await response.text()).trim() || 'No response.';
+        const reply = (await response.text()).trim() || 'Sorry, I could not get a response.';
 
         removeTyping();
         addMessage('ai', reply);

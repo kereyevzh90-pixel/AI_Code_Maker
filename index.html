@@ -806,7 +806,13 @@
           '?model=openai&system=' + encodeURIComponent(SYSTEM);
         const response = await fetch(url);
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        const reply = (await response.text()).trim() || 'Sorry, I could not get a response.';
+        const raw = (await response.text()).trim();
+        let reply;
+        try {
+          const data = JSON.parse(raw);
+          reply = data?.content || data?.choices?.[0]?.message?.content || data?.message?.content;
+        } catch { /* not JSON */ }
+        reply = reply || raw || 'Sorry, I could not get a response.';
 
         removeTyping();
         addMessage('ai', reply);

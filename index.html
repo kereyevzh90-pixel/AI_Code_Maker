@@ -556,6 +556,200 @@
     .chat-send:hover { opacity: 0.85; transform: translateY(-1px); }
     .chat-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
+    /* Playground */
+    .playground-section {
+      position: relative;
+      z-index: 10;
+      max-width: 960px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+
+    .playground-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .playground-section h2 span {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .playground-section .section-sub {
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.9rem;
+      margin-bottom: 28px;
+    }
+
+    .playground-box {
+      background: #111118;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .playground-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      background: #0e0e15;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-wrap: wrap;
+    }
+
+    .lang-tabs {
+      display: flex;
+      gap: 6px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .lang-tab {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: #9ca3af;
+      font-size: 0.82rem;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-tab:hover {
+      background: rgba(99,102,241,0.15);
+      border-color: rgba(99,102,241,0.3);
+      color: #a5b4fc;
+    }
+
+    .lang-tab.active {
+      background: rgba(99,102,241,0.2);
+      border-color: rgba(99,102,241,0.5);
+      color: #a5b4fc;
+    }
+
+    .run-btn {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 20px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .run-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .run-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .clear-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: #6b7280;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .clear-btn:hover {
+      border-color: rgba(255,255,255,0.25);
+      color: #9ca3af;
+    }
+
+    .playground-panes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (max-width: 640px) {
+      .playground-panes { grid-template-columns: 1fr; }
+    }
+
+    .pane-label {
+      font-size: 0.72rem;
+      color: #4b5563;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 16px 6px;
+      background: #0e0e15;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .code-editor {
+      width: 100%;
+      min-height: 260px;
+      background: #0d0d14;
+      border: none;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      color: #cdd6f4;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      padding: 16px;
+      outline: none;
+      resize: vertical;
+      tab-size: 4;
+    }
+
+    .code-editor:focus {
+      background: #0f0f16;
+    }
+
+    .output-pane {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .output-content {
+      flex: 1;
+      min-height: 260px;
+      background: #0a0a0f;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: #a6e3a1;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .output-content.has-error { color: #f38ba8; }
+    .output-content.is-html { padding: 0; }
+
+    .output-iframe {
+      width: 100%;
+      min-height: 260px;
+      border: none;
+      background: #fff;
+    }
+
+    .output-placeholder {
+      color: #374151;
+      font-style: italic;
+    }
+
+    .output-running {
+      color: #6366f1;
+      animation: blink 1s ease-in-out infinite;
+    }
+
     /* Footer */
     footer {
       position: relative;
@@ -596,7 +790,8 @@
       <div class="hero-stat"><span>&lt;3s</span>average time</div>
     </div>
     <div class="cta-group">
-      <button class="btn-primary" onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})">Try it free &rarr;</button>
+      <button class="btn-primary" onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})">Try AI Assistant &rarr;</button>
+      <button class="btn-secondary" onclick="document.getElementById('playground').scrollIntoView({behavior:'smooth'})">&#9654; Code Playground</button>
     </div>
 
     <!-- Demo window -->
@@ -651,6 +846,36 @@
       <div class="feature-icon">🔒</div>
       <h3>Secure by Default</h3>
       <p>Generated code follows best practices and is scanned for vulnerabilities.</p>
+    </div>
+  </section>
+
+  <!-- Code Playground -->
+  <section class="playground-section" id="playground">
+    <h2>Code <span>Playground</span></h2>
+    <p class="section-sub">Write and run code right here — Python, JavaScript, HTML, JSON. No install needed.</p>
+    <div class="playground-box">
+      <div class="playground-toolbar">
+        <div class="lang-tabs">
+          <button class="lang-tab active" onclick="selectLang('python')">🐍 Python</button>
+          <button class="lang-tab" onclick="selectLang('javascript')">⚡ JavaScript</button>
+          <button class="lang-tab" onclick="selectLang('html')">🌐 HTML</button>
+          <button class="lang-tab" onclick="selectLang('json')">{ } JSON</button>
+        </div>
+        <button class="clear-btn" onclick="clearEditor()">Clear</button>
+        <button class="run-btn" id="runBtn" onclick="runCode()">&#9654; Run</button>
+      </div>
+      <div class="playground-panes">
+        <div>
+          <div class="pane-label">Code</div>
+          <textarea class="code-editor" id="codeEditor" spellcheck="false" placeholder="Write your code here..."></textarea>
+        </div>
+        <div class="output-pane">
+          <div class="pane-label">Output</div>
+          <div class="output-content" id="outputContent">
+            <span class="output-placeholder">Output will appear here after you click Run ▶</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -786,6 +1011,149 @@
       const el = document.getElementById('typingIndicator');
       if (el) el.remove();
     }
+
+    // ───────────── Code Playground ─────────────
+    const STARTERS = {
+      python: `# Python runs in the browser via Piston API\nprint("Hello from Python!")\n\nfor i in range(5):\n    print(f"  {i} * {i} = {i*i}")`,
+      javascript: `// JavaScript runs right here in the browser\nconsole.log("Hello from JavaScript!");\n\nconst nums = [1, 2, 3, 4, 5];\nconst sum = nums.reduce((a, b) => a + b, 0);\nconsole.log("Sum:", sum);`,
+      html: `<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: sans-serif; background: #f0f4ff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }\n    h1 { color: #6366f1; }\n  </style>\n</head>\n<body>\n  <h1>Hello, HTML!</h1>\n  <p>Edit me and click Run ▶</p>\n</body>\n</html>`,
+      json: `{\n  "name": "AI Code Maker",\n  "version": "1.0",\n  "features": ["AI assistant", "Code playground", "30+ languages"],\n  "awesome": true\n}`
+    };
+
+    let currentLang = 'python';
+    const codeEditorEl = document.getElementById('codeEditor');
+    const outputEl = document.getElementById('outputContent');
+    const runBtnEl = document.getElementById('runBtn');
+
+    // Init
+    codeEditorEl.value = STARTERS[currentLang];
+
+    // Tab key in editor
+    codeEditorEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const s = codeEditorEl.selectionStart;
+        const end = codeEditorEl.selectionEnd;
+        codeEditorEl.value = codeEditorEl.value.substring(0, s) + '    ' + codeEditorEl.value.substring(end);
+        codeEditorEl.selectionStart = codeEditorEl.selectionEnd = s + 4;
+      }
+    });
+
+    function selectLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      codeEditorEl.value = STARTERS[lang];
+      clearOutput();
+      // Reset output pane (in case HTML iframe was there)
+      const pane = outputEl.parentElement;
+      const existing = pane.querySelector('iframe.output-iframe');
+      if (existing) existing.remove();
+      outputEl.style.display = '';
+      outputEl.className = 'output-content';
+      outputEl.innerHTML = '<span class="output-placeholder">Output will appear here after you click Run ▶</span>';
+    }
+
+    function clearEditor() {
+      codeEditorEl.value = '';
+      clearOutput();
+    }
+
+    function clearOutput() {
+      const pane = outputEl.parentElement;
+      const existing = pane.querySelector('iframe.output-iframe');
+      if (existing) existing.remove();
+      outputEl.style.display = '';
+      outputEl.className = 'output-content';
+      outputEl.innerHTML = '<span class="output-placeholder">Output will appear here after you click Run ▶</span>';
+    }
+
+    async function runCode() {
+      const code = codeEditorEl.value.trim();
+      if (!code) return;
+      runBtnEl.disabled = true;
+
+      if (currentLang === 'html') {
+        runHTML(code);
+        runBtnEl.disabled = false;
+        return;
+      }
+      if (currentLang === 'json') {
+        runJSON(code);
+        runBtnEl.disabled = false;
+        return;
+      }
+      if (currentLang === 'javascript') {
+        runJS(code);
+        runBtnEl.disabled = false;
+        return;
+      }
+      // Python → Piston API
+      outputEl.innerHTML = '<span class="output-running">Running Python...</span>';
+      try {
+        const res = await fetch('https://emkc.org/api/v2/piston/execute', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            language: 'python',
+            version: '3.10.0',
+            files: [{ name: 'main.py', content: code }]
+          })
+        });
+        const data = await res.json();
+        const out = (data.run?.stdout || '') + (data.run?.stderr || '');
+        outputEl.className = 'output-content' + (data.run?.stderr ? ' has-error' : '');
+        outputEl.textContent = out || '(no output)';
+      } catch (err) {
+        outputEl.className = 'output-content has-error';
+        outputEl.textContent = 'Error: ' + err.message;
+      }
+      runBtnEl.disabled = false;
+    }
+
+    function runHTML(code) {
+      const pane = outputEl.parentElement;
+      let iframe = pane.querySelector('iframe.output-iframe');
+      if (!iframe) {
+        outputEl.style.display = 'none';
+        iframe = document.createElement('iframe');
+        iframe.className = 'output-iframe';
+        iframe.sandbox = 'allow-scripts allow-same-origin';
+        pane.appendChild(iframe);
+      }
+      iframe.srcdoc = code;
+    }
+
+    function runJSON(code) {
+      try {
+        const parsed = JSON.parse(code);
+        outputEl.className = 'output-content';
+        outputEl.textContent = JSON.stringify(parsed, null, 2);
+      } catch (err) {
+        outputEl.className = 'output-content has-error';
+        outputEl.textContent = 'JSON Error: ' + err.message;
+      }
+    }
+
+    function runJS(code) {
+      const logs = [];
+      const origLog = console.log;
+      const origErr = console.error;
+      console.log = (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
+      console.error = (...args) => logs.push('Error: ' + args.join(' '));
+      try {
+        // eslint-disable-next-line no-new-func
+        new Function(code)();
+        outputEl.className = 'output-content';
+        outputEl.textContent = logs.length ? logs.join('\n') : '(no output)';
+      } catch (err) {
+        outputEl.className = 'output-content has-error';
+        outputEl.textContent = (logs.length ? logs.join('\n') + '\n\n' : '') + 'Error: ' + err.message;
+      }
+      console.log = origLog;
+      console.error = origErr;
+    }
+    // ───────────── End Playground ─────────────
 
     const SYSTEM = 'You are an expert coding assistant. Help users write, debug, and understand code. Be concise and provide working examples. Always respond in the same language the user writes in.';
 

@@ -801,28 +801,12 @@
       addTyping();
 
       try {
-        const response = await fetch('https://text.pollinations.ai/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: [
-              { role: 'system', content: SYSTEM },
-              { role: 'user', content: text }
-            ],
-            model: 'openai-large',
-            seed: Math.floor(Math.random() * 10000)
-          })
-        });
-        if (!response.ok) throw new Error('API error');
-        const raw = await response.text();
-        let reply;
-        try {
-          const data = JSON.parse(raw);
-          reply = data?.choices?.[0]?.message?.content?.trim();
-        } catch {
-          reply = raw.trim();
-        }
-        reply = reply || 'Sorry, I could not get a response.';
+        const url = 'https://text.pollinations.ai/' +
+          encodeURIComponent(SYSTEM + '\n\nUser: ' + text + '\nAssistant:') +
+          '?model=openai-large';
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const reply = (await response.text()).trim() || 'No response.';
 
         removeTyping();
         addMessage('ai', reply);

@@ -814,14 +814,21 @@
           })
         });
         if (!response.ok) throw new Error('API error');
-        const data = await response.json();
-        const reply = data?.choices?.[0]?.message?.content?.trim() || 'Sorry, I could not get a response.';
+        const raw = await response.text();
+        let reply;
+        try {
+          const data = JSON.parse(raw);
+          reply = data?.choices?.[0]?.message?.content?.trim();
+        } catch {
+          reply = raw.trim();
+        }
+        reply = reply || 'Sorry, I could not get a response.';
 
         removeTyping();
         addMessage('ai', reply);
       } catch (err) {
         removeTyping();
-        addMessage('ai', 'Connection error. Please try again.');
+        addMessage('ai', 'Error: ' + (err.message || 'Please try again.'));
       }
 
       sendBtn.disabled = false;

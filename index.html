@@ -814,7 +814,8 @@
           })
         });
         if (!response.ok) throw new Error('API error');
-        const reply = (await response.text()).trim() || 'Sorry, I could not get a response.';
+        const data = await response.json();
+        const reply = data?.choices?.[0]?.message?.content?.trim() || 'Sorry, I could not get a response.';
 
         removeTyping();
         addMessage('ai', reply);

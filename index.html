@@ -803,7 +803,7 @@
       try {
         const url = 'https://text.pollinations.ai/' +
           encodeURIComponent(text) +
-          '?model=openai-large&system=' + encodeURIComponent(SYSTEM);
+          '?model=openai&system=' + encodeURIComponent(SYSTEM);
         const response = await fetch(url);
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const reply = (await response.text()).trim() || 'Sorry, I could not get a response.';

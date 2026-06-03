@@ -3,13 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Code Maker</title>
+  <title>CodeLearn AI — Free Coding School</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -19,747 +15,446 @@
       overflow-x: hidden;
     }
 
-    /* Animated background */
+    /* Background */
     .bg-grid {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image:
-        linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+        linear-gradient(rgba(99,102,241,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.05) 1px, transparent 1px);
       background-size: 40px 40px;
       z-index: 0;
     }
-
     .bg-glow {
-      position: fixed;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-      top: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 0;
-      animation: pulse 4s ease-in-out infinite;
+      position: fixed; width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+      top: -150px; left: 50%; transform: translateX(-50%);
+      z-index: 0; animation: pulse 4s ease-in-out infinite;
     }
-
     @keyframes pulse {
-      0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
-      50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+      0%,100% { opacity:0.6; transform:translateX(-50%) scale(1); }
+      50% { opacity:1; transform:translateX(-50%) scale(1.1); }
+    }
+    @keyframes blink {
+      0%,100% { opacity:1; } 50% { opacity:0.2; }
+    }
+    @keyframes bounce {
+      0%,60%,100% { transform:translateY(0); opacity:0.4; }
+      30% { transform:translateY(-6px); opacity:1; }
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to { opacity:1; transform:translateY(0); }
     }
 
     /* Nav */
     nav {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 60px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(10px);
+      position: sticky; top: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 60px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(16px);
+      background: rgba(10,10,15,0.8);
     }
-
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #6366f1, #a855f7);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: #9ca3af;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 1.2rem; font-weight: 700; color: #fff;
       text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.2s;
     }
+    .logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-size: 16px;
+    }
+    .nav-links { display: flex; gap: 8px; list-style: none; align-items: center; }
+    .nav-links a {
+      color: #9ca3af; text-decoration: none; font-size: 0.88rem;
+      padding: 8px 16px; border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+    .nav-cta {
+      background: linear-gradient(135deg, #6366f1, #a855f7) !important;
+      color: #fff !important; font-weight: 600;
+    }
+    .nav-cta:hover { opacity: 0.88; background: linear-gradient(135deg, #6366f1, #a855f7) !important; }
+    .nav-hamburger { display: none; background: none; border: none; color: #9ca3af; font-size: 1.4rem; cursor: pointer; }
 
-    .nav-links a:hover {
-      color: #fff;
+    @media (max-width: 680px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
     }
 
     /* Hero */
     .hero {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 100px 20px 80px;
+      position: relative; z-index: 10;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 90px 20px 70px;
+      animation: fadeUp 0.6s ease both;
     }
-
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(99, 102, 241, 0.12);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      border-radius: 100px;
-      padding: 6px 16px;
-      font-size: 0.8rem;
-      color: #a5b4fc;
-      margin-bottom: 28px;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 100px; padding: 6px 16px; font-size: 0.8rem;
+      color: #a5b4fc; margin-bottom: 28px;
     }
-
     .badge-dot {
-      width: 6px;
-      height: 6px;
-      background: #6366f1;
-      border-radius: 50%;
+      width: 6px; height: 6px; background: #6366f1; border-radius: 50%;
       animation: blink 1.5s ease-in-out infinite;
     }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.2; }
-    }
-
     h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 800;
-      line-height: 1.1;
-      max-width: 800px;
-      margin-bottom: 24px;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 800; line-height: 1.1;
+      max-width: 820px; margin-bottom: 22px;
     }
-
     h1 span {
       background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
     .subtitle {
-      font-size: 1.1rem;
-      color: #9ca3af;
-      max-width: 560px;
-      line-height: 1.7;
-      margin-bottom: 44px;
+      font-size: 1.1rem; color: #9ca3af; max-width: 580px;
+      line-height: 1.7; margin-bottom: 44px;
     }
-
-    .hero-stats {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      margin-bottom: 36px;
-    }
-
-    .hero-stat {
-      text-align: center;
-      font-size: 0.82rem;
-      color: #6b7280;
-    }
-
-    .hero-stat span {
-      display: block;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 2px;
-    }
-
-    .hero-stat-divider {
-      width: 1px;
-      height: 36px;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .cta-group {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
+    .cta-group { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
     .btn-primary {
       background: linear-gradient(135deg, #6366f1, #a855f7);
-      color: #fff;
-      border: none;
-      padding: 14px 32px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+      color: #fff; border: none; padding: 14px 32px;
+      border-radius: 10px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 30px rgba(99,102,241,0.3);
     }
-
-    .btn-primary:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
-      box-shadow: 0 0 50px rgba(99, 102, 241, 0.5);
-    }
-
+    .btn-primary:hover { opacity:0.9; transform:translateY(-2px); box-shadow:0 0 50px rgba(99,102,241,0.5); }
     .btn-secondary {
-      background: transparent;
-      color: #e0e0e0;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 14px 32px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
+      background: transparent; color: #e0e0e0;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
       transition: border-color 0.2s, background 0.2s;
     }
+    .btn-secondary:hover { border-color:rgba(255,255,255,0.35); background:rgba(255,255,255,0.04); }
 
-    .btn-secondary:hover {
-      border-color: rgba(255, 255, 255, 0.35);
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    /* Code demo */
+    /* Demo window */
     .demo-window {
-      position: relative;
-      z-index: 10;
-      margin: 60px auto 0;
-      max-width: 860px;
+      position: relative; z-index: 10;
+      margin: 60px auto 0; max-width: 820px;
       width: calc(100% - 40px);
-      background: #111118;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99,102,241,0.1);
+      background: #111118; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.1);
     }
-
     .window-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 20px;
-      background: #0e0e15;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 20px; background: #0e0e15;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot-red   { background: #ff5f57; }
-    .dot-yellow{ background: #ffbd2e; }
-    .dot-green { background: #28c840; }
-
-    .window-title {
-      flex: 1;
-      text-align: center;
-      font-size: 0.78rem;
-      color: #555;
-    }
-
+    .dot { width:12px; height:12px; border-radius:50%; }
+    .dot-red { background:#ff5f57; } .dot-yellow { background:#ffbd2e; } .dot-green { background:#28c840; }
+    .window-title { flex:1; text-align:center; font-size:0.78rem; color:#555; }
     .code-body {
-      padding: 28px 32px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.88rem;
-      line-height: 1.8;
-      color: #cdd6f4;
-      overflow-x: auto;
+      padding: 24px 32px; font-family: 'Courier New', monospace;
+      font-size: 0.88rem; line-height: 1.8; color: #cdd6f4; overflow-x: auto;
     }
+    .kw { color:#cba6f7; } .fn { color:#89b4fa; } .str { color:#a6e3a1; }
+    .cmt { color:#585b70; font-style:italic; } .num { color:#fab387; }
 
-    .kw   { color: #cba6f7; }
-    .fn   { color: #89b4fa; }
-    .str  { color: #a6e3a1; }
-    .cmt  { color: #585b70; font-style: italic; }
-    .num  { color: #fab387; }
+    /* Section titles */
+    .section-title {
+      text-align: center; font-size: 2rem; font-weight: 700;
+      color: #fff; margin-bottom: 10px;
+    }
+    .section-title span {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-sub { text-align:center; color:#6b7280; font-size:0.9rem; margin-bottom:40px; }
+
+    /* How it works */
+    .how-section {
+      position: relative; z-index: 10;
+      max-width: 960px; margin: 80px auto; padding: 0 20px;
+    }
+    .steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px; margin-top: 40px;
+    }
+    .step-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 32px 28px;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+      text-align: center;
+    }
+    .step-card:hover { border-color:rgba(99,102,241,0.3); background:rgba(99,102,241,0.05); transform:translateY(-4px); }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 700; color: #fff;
+      margin: 0 auto 16px;
+    }
+    .step-card h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
+    .step-card p { font-size: 0.85rem; color: #6b7280; line-height: 1.6; }
+
+    /* Languages */
+    .langs-section {
+      position: relative; z-index: 10;
+      max-width: 1000px; margin: 0 auto 80px; padding: 0 20px;
+    }
+    .langs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+    }
+    .lang-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 22px 16px;
+      text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .lang-card:hover { border-color:rgba(99,102,241,0.4); background:rgba(99,102,241,0.07); transform:translateY(-3px); }
+    .lang-card .lang-emoji { font-size: 2rem; margin-bottom: 10px; display: block; }
+    .lang-card h4 { font-size: 0.92rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
+    .lang-card p { font-size: 0.75rem; color: #6b7280; }
 
     /* Features */
     .features {
-      position: relative;
-      z-index: 10;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      max-width: 960px;
-      margin: 80px auto;
-      padding: 0 20px;
+      position: relative; z-index: 10;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px; max-width: 960px; margin: 0 auto 80px; padding: 0 20px;
     }
-
     .feature-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 14px;
-      padding: 28px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 28px;
       transition: border-color 0.2s, background 0.2s, transform 0.2s;
     }
+    .feature-card:hover { border-color:rgba(99,102,241,0.3); background:rgba(99,102,241,0.05); transform:translateY(-4px); }
+    .feature-icon { font-size: 1.8rem; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; color: #fff; }
+    .feature-card p { font-size: 0.85rem; color: #6b7280; line-height: 1.6; }
 
-    .feature-card:hover {
-      border-color: rgba(99, 102, 241, 0.3);
-      background: rgba(99, 102, 241, 0.05);
-      transform: translateY(-4px);
+    /* Playground */
+    .playground-section {
+      position: relative; z-index: 10;
+      max-width: 960px; margin: 0 auto 80px; padding: 0 20px;
     }
-
-    .feature-icon {
-      font-size: 1.8rem;
-      margin-bottom: 14px;
-    }
-
-    .feature-card h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #fff;
-    }
-
-    .feature-card p {
-      font-size: 0.85rem;
-      color: #6b7280;
-      line-height: 1.6;
-    }
-
-    /* AI Chat Section */
-    .chat-section {
-      position: relative;
-      z-index: 10;
-      max-width: 860px;
-      margin: 0 auto 80px;
-      padding: 0 20px;
-    }
-
-    .chat-section h2 {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: #fff;
-    }
-
-    .chat-section h2 span {
-      background: linear-gradient(135deg, #6366f1, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .chat-section .section-sub {
-      text-align: center;
-      color: #6b7280;
-      font-size: 0.9rem;
-      margin-bottom: 28px;
-    }
-
-    .chat-box {
-      background: #111118;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      overflow: hidden;
+    .playground-box {
+      background: #111118; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; overflow: hidden;
       box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
+    .playground-toolbar {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px; background: #0e0e15;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      flex-wrap: wrap;
+    }
+    .lang-tabs { display: flex; gap: 6px; flex: 1; flex-wrap: wrap; }
+    .lang-tab {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 6px 14px; color: #9ca3af;
+      font-size: 0.82rem; font-family: 'Courier New', monospace;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .lang-tab:hover { background:rgba(99,102,241,0.15); border-color:rgba(99,102,241,0.3); color:#a5b4fc; }
+    .lang-tab.active { background:rgba(99,102,241,0.2); border-color:rgba(99,102,241,0.5); color:#a5b4fc; }
+    .run-btn {
+      background: linear-gradient(135deg, #6366f1, #a855f7); border: none;
+      border-radius: 8px; padding: 8px 20px; color: #fff;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s; white-space: nowrap;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .run-btn:hover { opacity:0.85; transform:translateY(-1px); }
+    .run-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+    .clear-btn {
+      background: transparent; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 8px 14px; color: #6b7280;
+      font-size: 0.82rem; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .clear-btn:hover { border-color:rgba(255,255,255,0.25); color:#9ca3af; }
+    .playground-panes { display: grid; grid-template-columns: 1fr 1fr; }
+    @media (max-width:640px) { .playground-panes { grid-template-columns: 1fr; } }
+    .pane-label {
+      font-size: 0.72rem; color: #4b5563; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 10px 16px 6px;
+      background: #0e0e15; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .code-editor {
+      width: 100%; min-height: 280px;
+      background: #0d0d14; border: none;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      color: #cdd6f4; font-family: 'Courier New', monospace;
+      font-size: 0.85rem; line-height: 1.7; padding: 16px;
+      outline: none; resize: vertical; tab-size: 4;
+    }
+    .code-editor:focus { background: #0f0f16; }
+    .output-pane { display: flex; flex-direction: column; }
+    .output-content {
+      flex: 1; min-height: 280px; background: #0a0a0f; padding: 16px;
+      font-family: 'Courier New', monospace; font-size: 0.85rem;
+      line-height: 1.7; color: #a6e3a1; overflow: auto;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .output-content.has-error { color: #f38ba8; }
+    .output-iframe { width: 100%; min-height: 280px; border: none; background: #fff; }
+    .output-placeholder { color: #374151; font-style: italic; }
+    .output-running { color: #6366f1; animation: blink 1s ease-in-out infinite; }
 
+    /* AI Chat */
+    .chat-section {
+      position: relative; z-index: 10;
+      max-width: 860px; margin: 0 auto 80px; padding: 0 20px;
+    }
+    .chat-box {
+      background: #111118; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
     .chat-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 20px;
-      background: #0e0e15;
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 20px; background: #0e0e15;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-
     .chat-header-dot {
-      width: 8px; height: 8px;
-      background: #28c840;
-      border-radius: 50%;
-      animation: blink 2s ease-in-out infinite;
+      width: 8px; height: 8px; background: #28c840;
+      border-radius: 50%; animation: blink 2s ease-in-out infinite;
     }
-
-    .chat-header span {
-      font-size: 0.85rem;
-      color: #9ca3af;
-    }
-
+    .chat-header span { font-size: 0.85rem; color: #9ca3af; }
     .chat-messages {
-      height: 380px;
-      overflow-y: auto;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      scroll-behavior: smooth;
+      height: 400px; overflow-y: auto; padding: 20px;
+      display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth;
     }
-
     .chat-messages::-webkit-scrollbar { width: 4px; }
     .chat-messages::-webkit-scrollbar-track { background: transparent; }
     .chat-messages::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-
-    .msg {
-      display: flex;
-      gap: 10px;
-      max-width: 85%;
-    }
-
+    .msg { display: flex; gap: 10px; max-width: 85%; }
     .msg.user { align-self: flex-end; flex-direction: row-reverse; }
-    .msg.ai   { align-self: flex-start; }
-
+    .msg.ai { align-self: flex-start; }
     .msg-avatar {
-      width: 32px; height: 32px;
-      border-radius: 8px;
+      width: 32px; height: 32px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px;
-      flex-shrink: 0;
+      font-size: 14px; flex-shrink: 0;
     }
-
     .msg.user .msg-avatar { background: linear-gradient(135deg, #6366f1, #a855f7); }
-    .msg.ai   .msg-avatar { background: #1e1e2e; border: 1px solid rgba(255,255,255,0.1); }
-
+    .msg.ai .msg-avatar { background: #1e1e2e; border: 1px solid rgba(255,255,255,0.1); }
     .msg-bubble {
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 0.875rem;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      word-break: break-word;
+      padding: 12px 16px; border-radius: 12px;
+      font-size: 0.875rem; line-height: 1.6;
+      white-space: pre-wrap; word-break: break-word;
     }
-
     .msg.user .msg-bubble {
       background: linear-gradient(135deg, #6366f1, #a855f7);
-      color: #fff;
-      border-bottom-right-radius: 4px;
+      color: #fff; border-bottom-right-radius: 4px;
     }
-
     .msg.ai .msg-bubble {
-      background: #1a1a25;
-      color: #cdd6f4;
+      background: #1a1a25; color: #cdd6f4;
       border-bottom-left-radius: 4px;
       border: 1px solid rgba(255,255,255,0.06);
       font-family: 'Courier New', monospace;
     }
-
-    .msg-bubble code {
-      background: rgba(0,0,0,0.3);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.82rem;
-    }
-
-    .code-block-wrapper {
-      position: relative;
-      margin: 8px 0;
-    }
-
+    .code-block-wrapper { position: relative; margin: 8px 0; }
     .code-block-wrapper pre {
-      background: #0d0d14;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 14px 16px;
-      padding-top: 36px;
-      overflow-x: auto;
-      font-family: 'Courier New', monospace;
-      font-size: 0.82rem;
-      line-height: 1.7;
-      color: #cdd6f4;
-      white-space: pre;
-      word-break: normal;
+      background: #0d0d14; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 16px; padding-top: 36px;
+      overflow-x: auto; font-family: 'Courier New', monospace;
+      font-size: 0.82rem; line-height: 1.7; color: #cdd6f4;
+      white-space: pre; word-break: normal;
     }
-
     .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(99,102,241,0.15);
-      border: 1px solid rgba(99,102,241,0.3);
-      border-radius: 6px;
-      color: #a5b4fc;
-      font-size: 0.72rem;
-      padding: 4px 10px;
-      cursor: pointer;
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 6px; color: #a5b4fc; font-size: 0.72rem;
+      padding: 4px 10px; cursor: pointer;
       transition: background 0.2s, color 0.2s;
       font-family: 'Segoe UI', sans-serif;
     }
-
-    .copy-btn:hover {
-      background: rgba(99,102,241,0.35);
-      color: #fff;
-    }
-
-    .copy-btn.copied {
-      background: rgba(40,200,64,0.2);
-      border-color: rgba(40,200,64,0.4);
-      color: #28c840;
-    }
-
+    .copy-btn:hover { background:rgba(99,102,241,0.35); color:#fff; }
+    .copy-btn.copied { background:rgba(40,200,64,0.2); border-color:rgba(40,200,64,0.4); color:#28c840; }
     .typing {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 12px 16px;
-      background: #1a1a25;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; gap: 4px;
+      padding: 12px 16px; background: #1a1a25;
+      border-radius: 12px; border: 1px solid rgba(255,255,255,0.06);
     }
-
     .typing span {
-      width: 6px; height: 6px;
-      background: #6366f1;
-      border-radius: 50%;
-      animation: bounce 1.2s ease-in-out infinite;
+      width: 6px; height: 6px; background: #6366f1;
+      border-radius: 50%; animation: bounce 1.2s ease-in-out infinite;
     }
-
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-6px); opacity: 1; }
-    }
-
     .chat-input-area {
-      display: flex;
-      gap: 10px;
-      padding: 16px 20px;
+      display: flex; gap: 10px; padding: 16px 20px;
       border-top: 1px solid rgba(255,255,255,0.06);
       background: #0e0e15;
     }
-
     .chat-input {
-      flex: 1;
-      background: #1a1a25;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 12px 16px;
-      color: #e0e0e0;
-      font-size: 0.9rem;
-      font-family: 'Segoe UI', sans-serif;
-      outline: none;
-      transition: border-color 0.2s;
-      resize: none;
+      flex: 1; background: #1a1a25; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 12px 16px; color: #e0e0e0;
+      font-size: 0.9rem; font-family: 'Segoe UI', sans-serif;
+      outline: none; transition: border-color 0.2s; resize: none;
     }
-
     .chat-input:focus { border-color: rgba(99,102,241,0.5); }
     .chat-input::placeholder { color: #4b5563; }
-
     .chat-send {
       background: linear-gradient(135deg, #6366f1, #a855f7);
-      border: none;
-      border-radius: 10px;
-      padding: 12px 20px;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s;
-      flex-shrink: 0;
+      border: none; border-radius: 10px; padding: 12px 20px;
+      color: #fff; font-size: 1rem; cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s; flex-shrink: 0;
     }
+    .chat-send:hover { opacity:0.85; transform:translateY(-1px); }
+    .chat-send:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
 
-    .chat-send:hover { opacity: 0.85; transform: translateY(-1px); }
-    .chat-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-    /* Playground */
-    .playground-section {
-      position: relative;
-      z-index: 10;
-      max-width: 960px;
-      margin: 0 auto 80px;
-      padding: 0 20px;
+    /* FAQ */
+    .faq-section {
+      position: relative; z-index: 10;
+      max-width: 720px; margin: 0 auto 80px; padding: 0 20px;
     }
-
-    .playground-section h2 {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: #fff;
+    .faq-item {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; margin-bottom: 10px; overflow: hidden;
     }
-
-    .playground-section h2 span {
-      background: linear-gradient(135deg, #6366f1, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .faq-q {
+      width: 100%; background: rgba(255,255,255,0.03); border: none;
+      padding: 18px 22px; color: #e0e0e0; font-size: 0.92rem;
+      font-weight: 600; text-align: left; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      transition: background 0.2s; font-family: 'Segoe UI', sans-serif;
     }
-
-    .playground-section .section-sub {
-      text-align: center;
-      color: #6b7280;
-      font-size: 0.9rem;
-      margin-bottom: 28px;
+    .faq-q:hover { background: rgba(99,102,241,0.06); }
+    .faq-q.open { color: #a5b4fc; }
+    .faq-arrow { font-size: 0.8rem; transition: transform 0.25s; color: #6b7280; }
+    .faq-q.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.2s;
+      padding: 0 22px; font-size: 0.875rem; color: #6b7280; line-height: 1.7;
     }
-
-    .playground-box {
-      background: #111118;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    }
-
-    .playground-toolbar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 20px;
-      background: #0e0e15;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      flex-wrap: wrap;
-    }
-
-    .lang-tabs {
-      display: flex;
-      gap: 6px;
-      flex: 1;
-      flex-wrap: wrap;
-    }
-
-    .lang-tab {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 6px 14px;
-      color: #9ca3af;
-      font-size: 0.82rem;
-      font-family: 'Courier New', monospace;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .lang-tab:hover {
-      background: rgba(99,102,241,0.15);
-      border-color: rgba(99,102,241,0.3);
-      color: #a5b4fc;
-    }
-
-    .lang-tab.active {
-      background: rgba(99,102,241,0.2);
-      border-color: rgba(99,102,241,0.5);
-      color: #a5b4fc;
-    }
-
-    .run-btn {
-      background: linear-gradient(135deg, #6366f1, #a855f7);
-      border: none;
-      border-radius: 8px;
-      padding: 8px 20px;
-      color: #fff;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s;
-      white-space: nowrap;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .run-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-    .run-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-    .clear-btn {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 8px 14px;
-      color: #6b7280;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-
-    .clear-btn:hover {
-      border-color: rgba(255,255,255,0.25);
-      color: #9ca3af;
-    }
-
-    .playground-panes {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    @media (max-width: 640px) {
-      .playground-panes { grid-template-columns: 1fr; }
-    }
-
-    .pane-label {
-      font-size: 0.72rem;
-      color: #4b5563;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 10px 16px 6px;
-      background: #0e0e15;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .code-editor {
-      width: 100%;
-      min-height: 260px;
-      background: #0d0d14;
-      border: none;
-      border-right: 1px solid rgba(255,255,255,0.06);
-      color: #cdd6f4;
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-      line-height: 1.7;
-      padding: 16px;
-      outline: none;
-      resize: vertical;
-      tab-size: 4;
-    }
-
-    .code-editor:focus {
-      background: #0f0f16;
-    }
-
-    .output-pane {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .output-content {
-      flex: 1;
-      min-height: 260px;
-      background: #0a0a0f;
-      padding: 16px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-      line-height: 1.7;
-      color: #a6e3a1;
-      overflow: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .output-content.has-error { color: #f38ba8; }
-    .output-content.is-html { padding: 0; }
-
-    .output-iframe {
-      width: 100%;
-      min-height: 260px;
-      border: none;
-      background: #fff;
-    }
-
-    .output-placeholder {
-      color: #374151;
-      font-style: italic;
-    }
-
-    .output-running {
-      color: #6366f1;
-      animation: blink 1s ease-in-out infinite;
-    }
+    .faq-a.open { max-height: 200px; padding: 0 22px 18px; }
 
     /* Footer */
     footer {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 40px 20px;
-      color: #374151;
-      font-size: 0.8rem;
-      border-top: 1px solid rgba(255,255,255,0.04);
+      position: relative; z-index: 10;
+      padding: 50px 20px 30px;
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
+    .footer-inner {
+      max-width: 960px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 1rem; font-weight: 700; color: #fff;
+    }
+    .footer-logo .logo-icon { width: 28px; height: 28px; font-size: 13px; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { color: #6b7280; text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+    .footer-links a:hover { color: #9ca3af; }
+    .footer-copy { color: #374151; font-size: 0.78rem; width: 100%; text-align: center; margin-top: 24px; }
   </style>
 </head>
 <body>
@@ -769,90 +464,181 @@
 
   <!-- Nav -->
   <nav>
-    <div class="logo">
+    <a class="logo" href="#">
       <div class="logo-icon">⚡</div>
-      AI Code Maker
-    </div>
+      CodeLearn AI
+    </a>
+    <ul class="nav-links">
+      <li><a href="#languages">Languages</a></li>
+      <li><a href="#playground">Playground</a></li>
+      <li><a href="#ai-chat">AI Tutor</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#ai-chat" class="nav-cta">Start Learning →</a></li>
+    </ul>
+    <button class="nav-hamburger">☰</button>
   </nav>
 
   <!-- Hero -->
   <section class="hero">
-<h1>Turn ideas into <span>working code</span> instantly</h1>
-    <p class="subtitle">
-      Just describe what you need — AI Code Maker writes clean, production-ready code in seconds.
-      No prompting skills required.
-    </p>
-    <div class="hero-stats">
-      <div class="hero-stat"><span>2M+</span>lines generated</div>
-      <div class="hero-stat-divider"></div>
-      <div class="hero-stat"><span>30+</span>languages</div>
-      <div class="hero-stat-divider"></div>
-      <div class="hero-stat"><span>&lt;3s</span>average time</div>
+    <div class="badge">
+      <div class="badge-dot"></div>
+      100% Free &nbsp;·&nbsp; No sign-up needed
     </div>
+    <h1>Learn to code<br>with your own <span>AI tutor</span></h1>
+    <p class="subtitle">
+      Ask anything — AI explains concepts, writes examples, fixes your code, and answers in your language.
+      All languages, all levels, completely free.
+    </p>
     <div class="cta-group">
-      <button class="btn-primary" onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})">Try AI Assistant &rarr;</button>
-      <button class="btn-secondary" onclick="document.getElementById('playground').scrollIntoView({behavior:'smooth'})">&#9654; Code Playground</button>
+      <button class="btn-primary" onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})">Ask AI Tutor →</button>
+      <button class="btn-secondary" onclick="document.getElementById('playground').scrollIntoView({behavior:'smooth'})">▶ Try Playground</button>
     </div>
 
-    <!-- Demo window -->
     <div class="demo-window">
       <div class="window-bar">
         <div class="dot dot-red"></div>
         <div class="dot dot-yellow"></div>
         <div class="dot dot-green"></div>
-        <div class="window-title">main.py — AI Code Maker</div>
+        <div class="window-title">lesson.py — CodeLearn AI</div>
       </div>
       <div class="code-body">
-        <span class="cmt"># AI Code Maker — generated in 2 seconds</span><br>
-        <span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI, HTTPException<br>
-        <span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel<br><br>
+        <span class="cmt"># Lesson: Python functions — explained by AI</span><br>
+        <span class="kw">def</span> <span class="fn">greet</span>(name: str) -> str:<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="cmt"># f-string lets you embed variables directly in text</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="str">f"Hello, {name}! Welcome to coding."</span><br><br>
 
-        app = <span class="fn">FastAPI</span>(title=<span class="str">"My API"</span>)<br><br>
+        <span class="cmt"># List comprehension — a compact way to build lists</span><br>
+        squares = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]<br><br>
 
-        <span class="kw">class</span> <span class="fn">Item</span>(BaseModel):<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;name: str<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;price: float<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;in_stock: bool = <span class="num">True</span><br><br>
-
-        <span class="fn">@app.get</span>(<span class="str">"/"</span>)<br>
-        <span class="kw">async def</span> <span class="fn">root</span>():<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> {<span class="str">"message"</span>: <span class="str">"Hello from AI Code Maker!"</span>}<br><br>
-
-        <span class="fn">@app.post</span>(<span class="str">"/items"</span>)<br>
-        <span class="kw">async def</span> <span class="fn">create_item</span>(item: Item):<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> {<span class="str">"id"</span>: <span class="num">1</span>, <span class="str">"item"</span>: item}
+        <span class="fn">print</span>(<span class="fn">greet</span>(<span class="str">"World"</span>))&nbsp;&nbsp;&nbsp;<span class="cmt"># Hello, World! Welcome to coding.</span><br>
+        <span class="fn">print</span>(squares)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cmt"># [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span>
       </div>
     </div>
   </section>
 
-  <!-- Features -->
-  <section class="features">
-    <div class="feature-card">
-      <div class="feature-icon">🤖</div>
-      <h3>AI-Powered Generation</h3>
-      <p>Describe your idea in plain language and get clean, working code instantly.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">⚡</div>
-      <h3>Lightning Fast</h3>
-      <p>Generate full functions, classes, and APIs in under 3 seconds.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🌐</div>
-      <h3>Any Language</h3>
-      <p>Python, JavaScript, TypeScript, Go, Rust, SQL — and 30+ more languages.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <h3>Secure by Default</h3>
-      <p>Generated code follows best practices and is scanned for vulnerabilities.</p>
+  <!-- How it works -->
+  <section class="how-section">
+    <h2 class="section-title">How it <span>works</span></h2>
+    <p class="section-sub">Three steps from zero to writing real code</p>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Pick a language</h3>
+        <p>Python, JavaScript, Java, C++, Go — choose what you want to learn or just start with Python.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Ask the AI tutor</h3>
+        <p>Type any question in your language. AI explains concepts, gives examples, and fixes your bugs step by step.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Run code live</h3>
+        <p>Try the examples right in the Playground — no install, no setup. Just write and run.</p>
+      </div>
     </div>
   </section>
 
-  <!-- Code Playground -->
+  <!-- Languages -->
+  <section class="langs-section" id="languages">
+    <h2 class="section-title">Pick your <span>language</span></h2>
+    <p class="section-sub">Click any language — AI tutor knows them all</p>
+    <div class="langs-grid">
+      <div class="lang-card" onclick="askAbout('Python')">
+        <span class="lang-emoji">🐍</span>
+        <h4>Python</h4>
+        <p>Best to start</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('JavaScript')">
+        <span class="lang-emoji">⚡</span>
+        <h4>JavaScript</h4>
+        <p>Web & frontend</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('TypeScript')">
+        <span class="lang-emoji">🔷</span>
+        <h4>TypeScript</h4>
+        <p>JS with types</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('Java')">
+        <span class="lang-emoji">☕</span>
+        <h4>Java</h4>
+        <p>Enterprise & Android</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('C++')">
+        <span class="lang-emoji">⚙️</span>
+        <h4>C++</h4>
+        <p>Speed & systems</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('C#')">
+        <span class="lang-emoji">🎮</span>
+        <h4>C#</h4>
+        <p>Games & .NET</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('Go')">
+        <span class="lang-emoji">🦫</span>
+        <h4>Go</h4>
+        <p>Fast backends</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('Rust')">
+        <span class="lang-emoji">🦀</span>
+        <h4>Rust</h4>
+        <p>Safe & fast</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('SQL')">
+        <span class="lang-emoji">🗄️</span>
+        <h4>SQL</h4>
+        <p>Databases</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('HTML & CSS')">
+        <span class="lang-emoji">🌐</span>
+        <h4>HTML/CSS</h4>
+        <p>Web pages</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('Swift')">
+        <span class="lang-emoji">🍎</span>
+        <h4>Swift</h4>
+        <p>iOS apps</p>
+      </div>
+      <div class="lang-card" onclick="askAbout('Kotlin')">
+        <span class="lang-emoji">📱</span>
+        <h4>Kotlin</h4>
+        <p>Android apps</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why us -->
+  <section style="position:relative;z-index:10;max-width:960px;margin:0 auto 80px;padding:0 20px;">
+    <h2 class="section-title">Why <span>CodeLearn AI</span></h2>
+    <p class="section-sub">Everything you need to go from beginner to developer</p>
+    <div class="features" style="margin:0;padding:0;">
+      <div class="feature-card">
+        <div class="feature-icon">🆓</div>
+        <h3>Completely Free</h3>
+        <p>No account, no credit card, no limits. Open the site and start learning right now.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Tutor 24/7</h3>
+        <p>Ask any question at any time. AI explains things at your level and never judges a "dumb question".</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">▶️</div>
+        <h3>Run Code in Browser</h3>
+        <p>Write Python, JavaScript, HTML — and run it instantly. No installs, no setup needed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <h3>Any Language</h3>
+        <p>AI answers in your native language — Russian, English, Spanish, or any other. Just write naturally.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Playground -->
   <section class="playground-section" id="playground">
-    <h2>Code <span>Playground</span></h2>
-    <p class="section-sub">Write and run code right here — Python, JavaScript, HTML, JSON. No install needed.</p>
+    <h2 class="section-title">Code <span>Playground</span></h2>
+    <p class="section-sub">Write and run code right here — no install needed</p>
     <div class="playground-box">
       <div class="playground-toolbar">
         <div class="lang-tabs">
@@ -879,47 +665,115 @@
     </div>
   </section>
 
-  <!-- AI Chat Section -->
+  <!-- AI Chat -->
   <section class="chat-section" id="ai-chat">
-    <h2>Try <span>AI Assistant</span> Free</h2>
+    <h2 class="section-title">Ask your <span>AI Tutor</span></h2>
+    <p class="section-sub">Write in any language — explain a concept, fix a bug, or show an example</p>
     <div class="chat-box">
       <div class="chat-header">
         <div class="chat-header-dot"></div>
-        <span>AI Code Maker — online</span>
+        <span>AI Tutor — online and free</span>
       </div>
       <div class="chat-messages" id="chatMessages">
         <div class="msg ai">
           <div class="msg-avatar">⚡</div>
-          <div class="msg-bubble">Hi! I'm your AI coding assistant. Ask me to write code, explain a bug, or help with any programming question.</div>
+          <div class="msg-bubble">Hi! I'm your AI coding tutor. Ask me anything — explain a concept, help with a bug, or show you how something works. I'll answer in your language.</div>
         </div>
       </div>
       <div class="chat-input-area">
-        <textarea class="chat-input" id="chatInput" placeholder="Write a function, fix a bug, explain code..." rows="1"></textarea>
+        <textarea class="chat-input" id="chatInput" placeholder="Ask anything: what is a loop? how to fix this error? how to build a website?..." rows="1"></textarea>
         <button class="chat-send" id="chatSend" onclick="sendMessage()">&#9658;</button>
       </div>
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="faq-section" id="faq">
+    <h2 class="section-title" style="margin-bottom:10px;">FAQ</h2>
+    <p class="section-sub">Common questions</p>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is this really free? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">Yes, 100% free. No account needed, no credit card, no hidden fees. Just open and learn.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What level do I need to start? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">Zero level is fine. Tell the AI you're a complete beginner and it will explain everything from scratch — variables, loops, functions, step by step.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can I ask questions in Russian or another language? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">Yes! The AI answers in whatever language you write in — Russian, English, Spanish, Chinese, and many more.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Which languages can I learn here? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">Python, JavaScript, TypeScript, Java, C, C++, C#, Go, Rust, Swift, Kotlin, SQL, HTML/CSS and more. If it's a programming language, AI knows it.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Does the code playground require any setup? <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-a">No setup at all. Python runs via a free API, JavaScript runs directly in your browser. Just write and click Run.</div>
+    </div>
+  </section>
+
   <footer>
-    &copy; 2026 AI Code Maker. All rights reserved.
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="logo-icon">⚡</div>
+        CodeLearn AI
+      </div>
+      <div class="footer-links">
+        <a href="#languages">Languages</a>
+        <a href="#playground">Playground</a>
+        <a href="#ai-chat">AI Tutor</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-copy">© 2026 CodeLearn AI — Free coding school for everyone.</div>
+    </div>
   </footer>
 
   <script>
+    // ── FAQ ──
+    function toggleFaq(btn) {
+      const answer = btn.nextElementSibling;
+      const isOpen = btn.classList.contains('open');
+      document.querySelectorAll('.faq-q.open').forEach(b => {
+        b.classList.remove('open');
+        b.nextElementSibling.classList.remove('open');
+      });
+      if (!isOpen) {
+        btn.classList.add('open');
+        answer.classList.add('open');
+      }
+    }
+
+    // ── Language cards → AI chat ──
+    function askAbout(lang) {
+      const input = document.getElementById('chatInput');
+      input.value = `Give me a quick intro to ${lang} for a complete beginner. What is it used for and show a simple example.`;
+      document.getElementById('ai-chat').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => sendMessage(), 600);
+    }
+
+    // ── Chat ──
     const messagesEl = document.getElementById('chatMessages');
     const inputEl    = document.getElementById('chatInput');
     const sendBtn    = document.getElementById('chatSend');
 
-    // Auto-resize textarea
     inputEl.addEventListener('input', () => {
       inputEl.style.height = 'auto';
       inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
     });
-
     inputEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
     });
 
     function escapeHtml(str) {
@@ -927,11 +781,7 @@
     }
 
     function renderContent(text, isAI) {
-      if (!isAI) {
-        const span = document.createElement('span');
-        span.textContent = text;
-        return span;
-      }
+      if (!isAI) { const s = document.createElement('span'); s.textContent = text; return s; }
       const frag = document.createDocumentFragment();
       const parts = text.split(/(```[\s\S]*?```)/g);
       parts.forEach(part => {
@@ -939,102 +789,91 @@
           const inner = part.slice(3, -3);
           const firstLine = inner.indexOf('\n');
           const code = firstLine !== -1 ? inner.slice(firstLine + 1) : inner;
-
           const wrapper = document.createElement('div');
           wrapper.className = 'code-block-wrapper';
-
           const btn = document.createElement('button');
-          btn.className = 'copy-btn';
-          btn.textContent = 'Copy';
+          btn.className = 'copy-btn'; btn.textContent = 'Copy';
           btn.onclick = () => {
             navigator.clipboard.writeText(code).then(() => {
-              btn.textContent = 'Copied!';
-              btn.classList.add('copied');
+              btn.textContent = 'Copied!'; btn.classList.add('copied');
               setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
             });
           };
-
           const pre = document.createElement('pre');
           pre.innerHTML = escapeHtml(code);
-
-          wrapper.appendChild(btn);
-          wrapper.appendChild(pre);
-          frag.appendChild(wrapper);
+          wrapper.appendChild(btn); wrapper.appendChild(pre); frag.appendChild(wrapper);
         } else if (part) {
-          const span = document.createElement('span');
-          span.textContent = part;
-          frag.appendChild(span);
+          const s = document.createElement('span'); s.textContent = part; frag.appendChild(s);
         }
       });
       return frag;
     }
 
     function addMessage(role, text) {
-      const wrapper = document.createElement('div');
-      wrapper.className = `msg ${role}`;
-
-      const avatar = document.createElement('div');
-      avatar.className = 'msg-avatar';
+      const wrapper = document.createElement('div'); wrapper.className = `msg ${role}`;
+      const avatar = document.createElement('div'); avatar.className = 'msg-avatar';
       avatar.textContent = role === 'user' ? '👤' : '⚡';
-
-      const bubble = document.createElement('div');
-      bubble.className = 'msg-bubble';
+      const bubble = document.createElement('div'); bubble.className = 'msg-bubble';
       bubble.appendChild(renderContent(text, role === 'ai'));
-
-      wrapper.appendChild(avatar);
-      wrapper.appendChild(bubble);
+      wrapper.appendChild(avatar); wrapper.appendChild(bubble);
       messagesEl.appendChild(wrapper);
       messagesEl.scrollTop = messagesEl.scrollHeight;
       return bubble;
     }
 
     function addTyping() {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'msg ai';
-      wrapper.id = 'typingIndicator';
-
-      const avatar = document.createElement('div');
-      avatar.className = 'msg-avatar';
-      avatar.textContent = '⚡';
-
-      const typing = document.createElement('div');
-      typing.className = 'typing';
+      const wrapper = document.createElement('div'); wrapper.className = 'msg ai'; wrapper.id = 'typingIndicator';
+      const avatar = document.createElement('div'); avatar.className = 'msg-avatar'; avatar.textContent = '⚡';
+      const typing = document.createElement('div'); typing.className = 'typing';
       typing.innerHTML = '<span></span><span></span><span></span>';
-
-      wrapper.appendChild(avatar);
-      wrapper.appendChild(typing);
+      wrapper.appendChild(avatar); wrapper.appendChild(typing);
       messagesEl.appendChild(wrapper);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
+    function removeTyping() { const el = document.getElementById('typingIndicator'); if (el) el.remove(); }
 
-    function removeTyping() {
-      const el = document.getElementById('typingIndicator');
-      if (el) el.remove();
+    const SYSTEM = 'You are an expert coding tutor. Teach users programming clearly and patiently. Explain concepts step by step, give practical examples, and help fix bugs. Always respond in the same language the user writes in.';
+
+    async function sendMessage() {
+      const text = inputEl.value.trim();
+      if (!text) return;
+      inputEl.value = ''; inputEl.style.height = 'auto'; sendBtn.disabled = true;
+      addMessage('user', text); addTyping();
+      try {
+        const url = 'https://text.pollinations.ai/' + encodeURIComponent(text) +
+          '?model=openai&system=' + encodeURIComponent(SYSTEM);
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const raw = (await response.text()).trim();
+        let reply;
+        try { const data = JSON.parse(raw); reply = data?.content || data?.choices?.[0]?.message?.content || data?.message?.content; } catch {}
+        reply = reply || raw || 'Sorry, could not get a response.';
+        removeTyping(); addMessage('ai', reply);
+      } catch (err) {
+        removeTyping(); addMessage('ai', 'Error: ' + (err.message || 'Please try again.'));
+      }
+      sendBtn.disabled = false; inputEl.focus();
     }
 
-    // ───────────── Code Playground ─────────────
+    // ── Playground ──
     const STARTERS = {
-      python: `# Python runs in the browser via Piston API\nprint("Hello from Python!")\n\nfor i in range(5):\n    print(f"  {i} * {i} = {i*i}")`,
-      javascript: `// JavaScript runs right here in the browser\nconsole.log("Hello from JavaScript!");\n\nconst nums = [1, 2, 3, 4, 5];\nconst sum = nums.reduce((a, b) => a + b, 0);\nconsole.log("Sum:", sum);`,
-      html: `<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: sans-serif; background: #f0f4ff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }\n    h1 { color: #6366f1; }\n  </style>\n</head>\n<body>\n  <h1>Hello, HTML!</h1>\n  <p>Edit me and click Run ▶</p>\n</body>\n</html>`,
-      json: `{\n  "name": "AI Code Maker",\n  "version": "1.0",\n  "features": ["AI assistant", "Code playground", "30+ languages"],\n  "awesome": true\n}`
+      python: `# Python — try editing and clicking Run!\nprint("Hello, World!")\n\n# A simple function\ndef square(n):\n    return n * n\n\nfor i in range(1, 6):\n    print(f"{i} squared = {square(i)}")`,
+      javascript: `// JavaScript — runs in your browser\nconsole.log("Hello, World!");\n\n// Arrow function\nconst square = n => n * n;\n\nfor (let i = 1; i <= 5; i++) {\n  console.log(\`\${i} squared = \${square(i)}\`);\n}`,
+      html: `<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: sans-serif; background: #f0f4ff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; flex-direction: column; gap: 16px; }\n    h1 { color: #6366f1; }\n    button { background: #6366f1; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; cursor: pointer; }\n  </style>\n</head>\n<body>\n  <h1>Hello, HTML!</h1>\n  <button onclick="this.textContent='Clicked!'">Click me</button>\n</body>\n</html>`,
+      json: `{\n  "name": "CodeLearn AI",\n  "version": "1.0",\n  "features": ["AI tutor", "Code playground", "12+ languages"],\n  "free": true,\n  "levels": ["beginner", "intermediate", "advanced"]\n}`
     };
 
     let currentLang = 'python';
     const codeEditorEl = document.getElementById('codeEditor');
-    const outputEl = document.getElementById('outputContent');
-    const runBtnEl = document.getElementById('runBtn');
-
-    // Init
+    const outputEl     = document.getElementById('outputContent');
+    const runBtnEl     = document.getElementById('runBtn');
     codeEditorEl.value = STARTERS[currentLang];
 
-    // Tab key in editor
     codeEditorEl.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
         e.preventDefault();
-        const s = codeEditorEl.selectionStart;
-        const end = codeEditorEl.selectionEnd;
-        codeEditorEl.value = codeEditorEl.value.substring(0, s) + '    ' + codeEditorEl.value.substring(end);
+        const s = codeEditorEl.selectionStart, end = codeEditorEl.selectionEnd;
+        codeEditorEl.value = codeEditorEl.value.substring(0,s) + '    ' + codeEditorEl.value.substring(end);
         codeEditorEl.selectionStart = codeEditorEl.selectionEnd = s + 4;
       }
     });
@@ -1045,20 +884,8 @@
       event.target.classList.add('active');
       codeEditorEl.value = STARTERS[lang];
       clearOutput();
-      // Reset output pane (in case HTML iframe was there)
-      const pane = outputEl.parentElement;
-      const existing = pane.querySelector('iframe.output-iframe');
-      if (existing) existing.remove();
-      outputEl.style.display = '';
-      outputEl.className = 'output-content';
-      outputEl.innerHTML = '<span class="output-placeholder">Output will appear here after you click Run ▶</span>';
     }
-
-    function clearEditor() {
-      codeEditorEl.value = '';
-      clearOutput();
-    }
-
+    function clearEditor() { codeEditorEl.value = ''; clearOutput(); }
     function clearOutput() {
       const pane = outputEl.parentElement;
       const existing = pane.querySelector('iframe.output-iframe');
@@ -1072,33 +899,14 @@
       const code = codeEditorEl.value.trim();
       if (!code) return;
       runBtnEl.disabled = true;
-
-      if (currentLang === 'html') {
-        runHTML(code);
-        runBtnEl.disabled = false;
-        return;
-      }
-      if (currentLang === 'json') {
-        runJSON(code);
-        runBtnEl.disabled = false;
-        return;
-      }
-      if (currentLang === 'javascript') {
-        runJS(code);
-        runBtnEl.disabled = false;
-        return;
-      }
-      // Python → Piston API
+      if (currentLang === 'html') { runHTML(code); runBtnEl.disabled = false; return; }
+      if (currentLang === 'json') { runJSON(code); runBtnEl.disabled = false; return; }
+      if (currentLang === 'javascript') { runJS(code); runBtnEl.disabled = false; return; }
       outputEl.innerHTML = '<span class="output-running">Running Python...</span>';
       try {
         const res = await fetch('https://emkc.org/api/v2/piston/execute', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            language: 'python',
-            version: '3.10.0',
-            files: [{ name: 'main.py', content: code }]
-          })
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ language: 'python', version: '3.10.0', files: [{ name: 'main.py', content: code }] })
         });
         const data = await res.json();
         const out = (data.run?.stdout || '') + (data.run?.stderr || '');
@@ -1123,26 +931,21 @@
       }
       iframe.srcdoc = code;
     }
-
     function runJSON(code) {
       try {
-        const parsed = JSON.parse(code);
         outputEl.className = 'output-content';
-        outputEl.textContent = JSON.stringify(parsed, null, 2);
+        outputEl.textContent = JSON.stringify(JSON.parse(code), null, 2);
       } catch (err) {
         outputEl.className = 'output-content has-error';
         outputEl.textContent = 'JSON Error: ' + err.message;
       }
     }
-
     function runJS(code) {
       const logs = [];
-      const origLog = console.log;
-      const origErr = console.error;
-      console.log = (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' '));
-      console.error = (...args) => logs.push('Error: ' + args.join(' '));
+      const origLog = console.log, origErr = console.error;
+      console.log = (...a) => logs.push(a.map(x => typeof x === 'object' ? JSON.stringify(x,null,2) : String(x)).join(' '));
+      console.error = (...a) => logs.push('Error: ' + a.join(' '));
       try {
-        // eslint-disable-next-line no-new-func
         new Function(code)();
         outputEl.className = 'output-content';
         outputEl.textContent = logs.length ? logs.join('\n') : '(no output)';
@@ -1150,47 +953,7 @@
         outputEl.className = 'output-content has-error';
         outputEl.textContent = (logs.length ? logs.join('\n') + '\n\n' : '') + 'Error: ' + err.message;
       }
-      console.log = origLog;
-      console.error = origErr;
-    }
-    // ───────────── End Playground ─────────────
-
-    const SYSTEM = 'You are an expert coding assistant. Help users write, debug, and understand code. Be concise and provide working examples. Always respond in the same language the user writes in.';
-
-    async function sendMessage() {
-      const text = inputEl.value.trim();
-      if (!text) return;
-
-      inputEl.value = '';
-      inputEl.style.height = 'auto';
-      sendBtn.disabled = true;
-
-      addMessage('user', text);
-      addTyping();
-
-      try {
-        const url = 'https://text.pollinations.ai/' +
-          encodeURIComponent(text) +
-          '?model=openai&system=' + encodeURIComponent(SYSTEM);
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        const raw = (await response.text()).trim();
-        let reply;
-        try {
-          const data = JSON.parse(raw);
-          reply = data?.content || data?.choices?.[0]?.message?.content || data?.message?.content;
-        } catch { /* not JSON */ }
-        reply = reply || raw || 'Sorry, I could not get a response.';
-
-        removeTyping();
-        addMessage('ai', reply);
-      } catch (err) {
-        removeTyping();
-        addMessage('ai', 'Error: ' + (err.message || 'Please try again.'));
-      }
-
-      sendBtn.disabled = false;
-      inputEl.focus();
+      console.log = origLog; console.error = origErr;
     }
   </script>
 

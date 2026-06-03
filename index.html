@@ -866,16 +866,20 @@
       addTyping();
 
       try {
-        const messages = [{ role: 'system', content: SYSTEM }, ...chatHistory];
-        const response = await fetch('https://text.pollinations.ai/openai', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'openai', messages })
-        });
+        // Build context from last 4 messages
+        let contextPrompt = text;
+        if (chatHistory.length > 1) {
+          const history = chatHistory.slice(-5, -1);
+          const ctx = history.map(m => (m.role === 'user' ? 'User: ' : 'AI: ') + m.content).join('\n');
+          contextPrompt = 'Previous conversation:\n' + ctx + '\n\nUser: ' + text;
+        }
+        const url = 'https://text.pollinations.ai/' +
+          encodeURIComponent(contextPrompt) +
+          '?model=openai-large&system=' + encodeURIComponent(SYSTEM);
+        const response = await fetch(url);
         if (!response.ok) throw new Error('HTTP ' + response.status);
-        const data = await response.json();
-        let reply = data?.choices?.[0]?.message?.content || data?.content;
-        reply = reply || 'Sorry, could not get a response.';
+        const raw = (await response.text()).trim();
+        let reply = raw || 'Sorry, could not get a response.';
 
         chatHistory.push({ role: 'assistant', content: reply });
         removeTyping();

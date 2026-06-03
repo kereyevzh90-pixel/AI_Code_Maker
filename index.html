@@ -285,7 +285,7 @@
       background: #0e0e15; border-bottom: 1px solid rgba(255,255,255,0.04);
     }
     .code-editor {
-      width: 100%; min-height: 280px;
+      width: 100%; min-height: 340px;
       background: #0d0d14; border: none;
       border-right: 1px solid rgba(255,255,255,0.06);
       color: #cdd6f4; font-family: 'Courier New', monospace;
@@ -293,17 +293,33 @@
       outline: none; resize: vertical; tab-size: 4;
     }
     .code-editor:focus { background: #0f0f16; }
-    .output-pane { display: flex; flex-direction: column; }
+    .output-pane { display: flex; flex-direction: column; position: relative; }
     .output-content {
-      flex: 1; min-height: 280px; background: #0a0a0f; padding: 16px;
+      flex: 1; min-height: 340px; background: #0a0a0f; padding: 16px;
       font-family: 'Courier New', monospace; font-size: 0.85rem;
       line-height: 1.7; color: #a6e3a1; overflow: auto;
       white-space: pre-wrap; word-break: break-word;
     }
     .output-content.has-error { color: #f38ba8; }
-    .output-iframe { width: 100%; min-height: 280px; border: none; background: #fff; }
+    .output-iframe { width: 100%; min-height: 340px; border: none; background: #0a0a0f; display: block; }
+    .output-iframe.game-frame { min-height: 420px; background: #000; }
     .output-placeholder { color: #374151; font-style: italic; }
     .output-running { color: #6366f1; animation: blink 1s ease-in-out infinite; }
+
+    /* Fullscreen output */
+    .output-pane.fullscreen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000; display: flex; flex-direction: column;
+    }
+    .output-pane.fullscreen .output-iframe,
+    .output-pane.fullscreen .output-content { min-height: 100vh; height: 100vh; }
+    .fullscreen-close {
+      position: fixed; top: 12px; right: 16px; z-index: 10000;
+      background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; border-radius: 8px; padding: 6px 14px;
+      font-size: 0.82rem; cursor: pointer; font-family: 'Segoe UI', sans-serif;
+      display: none;
+    }
 
     /* AI Chat */
     .chat-section {
@@ -645,9 +661,11 @@
           <button class="lang-tab active" onclick="selectLang('python')">🐍 Python</button>
           <button class="lang-tab" onclick="selectLang('javascript')">⚡ JavaScript</button>
           <button class="lang-tab" onclick="selectLang('html')">🌐 HTML</button>
+          <button class="lang-tab" onclick="selectLang('game')">🎮 Game</button>
           <button class="lang-tab" onclick="selectLang('json')">{ } JSON</button>
         </div>
         <button class="clear-btn" onclick="clearEditor()">Clear</button>
+        <button class="clear-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Fullscreen output">⛶</button>
         <button class="run-btn" id="runBtn" onclick="runCode()">&#9654; Run</button>
       </div>
       <div class="playground-panes">
@@ -655,12 +673,13 @@
           <div class="pane-label">Code</div>
           <textarea class="code-editor" id="codeEditor" spellcheck="false" placeholder="Write your code here..."></textarea>
         </div>
-        <div class="output-pane">
+        <div class="output-pane" id="outputPane">
           <div class="pane-label">Output</div>
           <div class="output-content" id="outputContent">
             <span class="output-placeholder">Output will appear here after you click Run ▶</span>
           </div>
         </div>
+        <button class="fullscreen-close" id="fullscreenClose" onclick="toggleFullscreen()">✕ Exit Fullscreen</button>
       </div>
     </div>
   </section>
@@ -858,8 +877,9 @@
     // ── Playground ──
     const STARTERS = {
       python: `# Python — try editing and clicking Run!\nprint("Hello, World!")\n\n# A simple function\ndef square(n):\n    return n * n\n\nfor i in range(1, 6):\n    print(f"{i} squared = {square(i)}")`,
-      javascript: `// JavaScript — runs in your browser\nconsole.log("Hello, World!");\n\n// Arrow function\nconst square = n => n * n;\n\nfor (let i = 1; i <= 5; i++) {\n  console.log(\`\${i} squared = \${square(i)}\`);\n}`,
+      javascript: `// JavaScript — full DOM & Canvas access!\n// Try drawing on canvas or manipulating the page\n\nconst app = document.getElementById('app');\napp.innerHTML = '<h2 style="color:#a5b4fc;font-family:sans-serif;padding:20px">Hello from JS!</h2>';\n\n// console.log shows at the bottom\nconsole.log("Sum 1-100:", Array.from({length:100},(_,i)=>i+1).reduce((a,b)=>a+b,0));`,
       html: `<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: sans-serif; background: #f0f4ff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; flex-direction: column; gap: 16px; }\n    h1 { color: #6366f1; }\n    button { background: #6366f1; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1rem; cursor: pointer; }\n  </style>\n</head>\n<body>\n  <h1>Hello, HTML!</h1>\n  <button onclick="this.textContent='Clicked!'">Click me</button>\n</body>\n</html>`,
+      game: `// 🎮 Bouncing Balls — click to add more!\nconst canvas = document.getElementById('gameCanvas');\nconst ctx = canvas.getContext('2d');\ncanvas.width = canvas.offsetWidth;\ncanvas.height = canvas.offsetHeight;\n\nconst COLORS = ['#6366f1','#a855f7','#ec4899','#f59e0b','#10b981','#3b82f6'];\nconst balls = [];\n\nfunction makeBall(x, y) {\n  return {\n    x: x || Math.random() * canvas.width,\n    y: y || Math.random() * canvas.height,\n    r: 12 + Math.random() * 18,\n    vx: (Math.random() - 0.5) * 6,\n    vy: (Math.random() - 0.5) * 6,\n    color: COLORS[Math.floor(Math.random() * COLORS.length)]\n  };\n}\n\n// Start with 8 balls\nfor (let i = 0; i < 8; i++) balls.push(makeBall());\n\n// Click to add more\ncanvas.addEventListener('click', e => {\n  const rect = canvas.getBoundingClientRect();\n  balls.push(makeBall(e.clientX - rect.left, e.clientY - rect.top));\n});\n\nfunction update() {\n  ctx.fillStyle = 'rgba(10,10,15,0.25)';\n  ctx.fillRect(0, 0, canvas.width, canvas.height);\n\n  for (const b of balls) {\n    b.x += b.vx; b.y += b.vy;\n    if (b.x - b.r < 0 || b.x + b.r > canvas.width) b.vx *= -1;\n    if (b.y - b.r < 0 || b.y + b.r > canvas.height) b.vy *= -1;\n\n    ctx.beginPath();\n    ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);\n    ctx.fillStyle = b.color;\n    ctx.shadowBlur = 16;\n    ctx.shadowColor = b.color;\n    ctx.fill();\n    ctx.shadowBlur = 0;\n  }\n  requestAnimationFrame(update);\n}\nupdate();\nconsole.log("Click anywhere to add balls!");`,
       json: `{\n  "name": "CodeLearn AI",\n  "version": "1.0",\n  "features": ["AI tutor", "Code playground", "12+ languages"],\n  "free": true,\n  "levels": ["beginner", "intermediate", "advanced"]\n}`
     };
 
@@ -887,7 +907,7 @@
     }
     function clearEditor() { codeEditorEl.value = ''; clearOutput(); }
     function clearOutput() {
-      const pane = outputEl.parentElement;
+      const pane = document.getElementById('outputPane');
       const existing = pane.querySelector('iframe.output-iframe');
       if (existing) existing.remove();
       outputEl.style.display = '';
@@ -895,14 +915,29 @@
       outputEl.innerHTML = '<span class="output-placeholder">Output will appear here after you click Run ▶</span>';
     }
 
+    // Fullscreen toggle
+    function toggleFullscreen() {
+      const pane = document.getElementById('outputPane');
+      const closeBtn = document.getElementById('fullscreenClose');
+      const isFs = pane.classList.toggle('fullscreen');
+      closeBtn.style.display = isFs ? 'block' : 'none';
+      document.body.style.overflow = isFs ? 'hidden' : '';
+    }
+
     async function runCode() {
       const code = codeEditorEl.value.trim();
       if (!code) return;
       runBtnEl.disabled = true;
-      if (currentLang === 'html') { runHTML(code); runBtnEl.disabled = false; return; }
+      if (currentLang === 'html') { runInIframe(code, false); runBtnEl.disabled = false; return; }
       if (currentLang === 'json') { runJSON(code); runBtnEl.disabled = false; return; }
       if (currentLang === 'javascript') { runJS(code); runBtnEl.disabled = false; return; }
+      if (currentLang === 'game') { runGame(code); runBtnEl.disabled = false; return; }
+      // Python
       outputEl.innerHTML = '<span class="output-running">Running Python...</span>';
+      outputEl.style.display = '';
+      const pane = document.getElementById('outputPane');
+      const existing = pane.querySelector('iframe.output-iframe');
+      if (existing) existing.remove();
       try {
         const res = await fetch('https://emkc.org/api/v2/piston/execute', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -919,19 +954,75 @@
       runBtnEl.disabled = false;
     }
 
-    function runHTML(code) {
-      const pane = outputEl.parentElement;
+    function runInIframe(html, isGame) {
+      const pane = document.getElementById('outputPane');
       let iframe = pane.querySelector('iframe.output-iframe');
       if (!iframe) {
         outputEl.style.display = 'none';
         iframe = document.createElement('iframe');
-        iframe.className = 'output-iframe';
+        iframe.className = 'output-iframe' + (isGame ? ' game-frame' : '');
         iframe.sandbox = 'allow-scripts allow-same-origin';
         pane.appendChild(iframe);
+      } else {
+        iframe.className = 'output-iframe' + (isGame ? ' game-frame' : '');
       }
-      iframe.srcdoc = code;
+      iframe.srcdoc = html;
     }
+
+    function runJS(code) {
+      const escaped = code.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+      const html = `<!DOCTYPE html><html><head><style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#0a0a0f; color:#cdd6f4; font-family:'Courier New',monospace; font-size:13px; min-height:100vh; }
+        #app { padding: 16px; }
+        #_console { position:fixed; bottom:0; left:0; right:0; background:rgba(0,0,0,0.85);
+          border-top:1px solid #222; padding:8px 12px; max-height:120px; overflow-y:auto;
+          font-size:12px; color:#a6e3a1; }
+        .log-err { color:#f38ba8; }
+      </style></head><body>
+      <div id="app"></div>
+      <div id="_console"></div>
+      <script>
+        const _co = document.getElementById('_console');
+        function _log(cls, args) {
+          const d = document.createElement('div');
+          if (cls) d.className = cls;
+          d.textContent = args.map(a => typeof a === 'object' ? JSON.stringify(a,null,2) : String(a)).join(' ');
+          _co.appendChild(d); _co.scrollTop = _co.scrollHeight;
+        }
+        console.log = (...a) => _log('', a);
+        console.error = (...a) => _log('log-err', a);
+        console.warn = (...a) => _log('log-err', a);
+        try { ${code} } catch(e) { _log('log-err', ['Error: ' + e.message]); }
+      <\/script></body></html>`;
+      runInIframe(html, false);
+    }
+
+    function runGame(code) {
+      const html = `<!DOCTYPE html><html><head><style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:#000; overflow:hidden; }
+        #gameCanvas { display:block; width:100vw; height:100vh; }
+        #_console { position:fixed; bottom:0; left:0; right:0; background:rgba(0,0,0,0.7);
+          padding:6px 12px; font-family:monospace; font-size:11px; color:#a6e3a1;
+          max-height:60px; overflow:hidden; pointer-events:none; }
+      </style></head><body>
+      <canvas id="gameCanvas"></canvas>
+      <div id="_console"></div>
+      <script>
+        const _co = document.getElementById('_console');
+        console.log = (...a) => { _co.textContent = a.join(' '); };
+        console.error = (...a) => { _co.style.color='#f38ba8'; _co.textContent = 'Error: ' + a.join(' '); };
+        try { ${code} } catch(e) { _co.style.color='#f38ba8'; _co.textContent='Error: '+e.message; }
+      <\/script></body></html>`;
+      runInIframe(html, true);
+    }
+
     function runJSON(code) {
+      const pane = document.getElementById('outputPane');
+      const existing = pane.querySelector('iframe.output-iframe');
+      if (existing) existing.remove();
+      outputEl.style.display = '';
       try {
         outputEl.className = 'output-content';
         outputEl.textContent = JSON.stringify(JSON.parse(code), null, 2);
@@ -939,21 +1030,6 @@
         outputEl.className = 'output-content has-error';
         outputEl.textContent = 'JSON Error: ' + err.message;
       }
-    }
-    function runJS(code) {
-      const logs = [];
-      const origLog = console.log, origErr = console.error;
-      console.log = (...a) => logs.push(a.map(x => typeof x === 'object' ? JSON.stringify(x,null,2) : String(x)).join(' '));
-      console.error = (...a) => logs.push('Error: ' + a.join(' '));
-      try {
-        new Function(code)();
-        outputEl.className = 'output-content';
-        outputEl.textContent = logs.length ? logs.join('\n') : '(no output)';
-      } catch (err) {
-        outputEl.className = 'output-content has-error';
-        outputEl.textContent = (logs.length ? logs.join('\n') + '\n\n' : '') + 'Error: ' + err.message;
-      }
-      console.log = origLog; console.error = origErr;
     }
   </script>
 

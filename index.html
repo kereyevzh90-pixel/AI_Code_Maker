@@ -1561,26 +1561,54 @@
 
     codeEditorEl.addEventListener('input', () => updateLineNums());
     codeEditorEl.addEventListener('scroll', () => { lineNumsEl.scrollTop = codeEditorEl.scrollTop; });
+    const PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'" };
+
     codeEditorEl.addEventListener('keydown', e => {
+      const s = codeEditorEl.selectionStart;
+      const end = codeEditorEl.selectionEnd;
+      const val = codeEditorEl.value;
+
+      // Tab → 4 spaces
       if (e.key === 'Tab') {
         e.preventDefault();
-        const s = codeEditorEl.selectionStart;
-        codeEditorEl.value = codeEditorEl.value.slice(0, s) + '    ' + codeEditorEl.value.slice(codeEditorEl.selectionEnd);
+        codeEditorEl.value = val.slice(0, s) + '    ' + val.slice(end);
         codeEditorEl.selectionStart = codeEditorEl.selectionEnd = s + 4;
         updateLineNums();
+        return;
+      }
+
+      // Auto-close brackets and quotes
+      if (PAIRS[e.key]) {
+        e.preventDefault();
+        const close = PAIRS[e.key];
+        const selected = val.slice(s, end);
+        codeEditorEl.value = val.slice(0, s) + e.key + selected + close + val.slice(end);
+        codeEditorEl.selectionStart = codeEditorEl.selectionEnd = s + 1 + selected.length;
+        updateLineNums();
+        return;
+      }
+
+      // Skip over closing char if already there
+      if (')]}"\''.includes(e.key) && val[s] === e.key) {
+        e.preventDefault();
+        codeEditorEl.selectionStart = codeEditorEl.selectionEnd = s + 1;
+        return;
+      }
+
+      // Backspace removes pair
+      if (e.key === 'Backspace' && s === end && s > 0) {
+        const before = val[s - 1], after = val[s];
+        if (PAIRS[before] === after) {
+          e.preventDefault();
+          codeEditorEl.value = val.slice(0, s - 1) + val.slice(s + 1);
+          codeEditorEl.selectionStart = codeEditorEl.selectionEnd = s - 1;
+          updateLineNums();
+        }
       }
     });
+
     codeEditorEl.value = STARTERS[currentLang];
     updateLineNums();
-
-    codeEditorEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Tab') {
-        e.preventDefault();
-        const s = codeEditorEl.selectionStart, end = codeEditorEl.selectionEnd;
-        codeEditorEl.value = codeEditorEl.value.substring(0,s) + '    ' + codeEditorEl.value.substring(end);
-        codeEditorEl.selectionStart = codeEditorEl.selectionEnd = s + 4;
-      }
-    });
 
     function selectLang(lang) {
       currentLang = lang;

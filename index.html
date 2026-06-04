@@ -1549,8 +1549,14 @@
     }
 
     function parseErrLine(msg) {
-      const m = msg.match(/line (\d+)/i);
-      return m ? parseInt(m[1]) : null;
+      // Prefer the user's code file reference
+      const exec = msg.match(/File "<exec>",\s*line (\d+)/i);
+      if (exec) return parseInt(exec[1]);
+      const detected = msg.match(/detected at line (\d+)/i);
+      if (detected) return parseInt(detected[1]);
+      // Fallback: last "line X" in the message
+      const all = [...msg.matchAll(/line (\d+)/gi)];
+      return all.length ? parseInt(all[all.length - 1][1]) : null;
     }
 
     codeEditorEl.addEventListener('input', () => updateLineNums());

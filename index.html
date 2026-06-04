@@ -171,6 +171,69 @@
     }
     .section-sub { text-align:center; color:#6b7280; font-size:0.9rem; margin-bottom:40px; }
 
+    /* Onboarding */
+    .onboard-section {
+      position: relative; z-index: 10;
+      max-width: 760px; margin: 0 auto 80px; padding: 0 20px;
+    }
+    .onboard-box {
+      background: #111118; border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 20px; padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(99,102,241,0.08);
+    }
+    @media (max-width:600px) { .onboard-box { padding: 32px 20px; } }
+    .onboard-progress {
+      display: flex; gap: 8px; margin-bottom: 36px;
+    }
+    .onboard-prog-dot {
+      height: 4px; border-radius: 4px; flex: 1;
+      background: rgba(255,255,255,0.08); transition: background 0.3s;
+    }
+    .onboard-prog-dot.done { background: linear-gradient(90deg,#6366f1,#a855f7); }
+    .onboard-step { display: none; }
+    .onboard-step.active { display: block; animation: fadeUp 0.35s ease both; }
+    .onboard-q {
+      font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: 8px;
+    }
+    .onboard-sub { font-size: 0.88rem; color: #6b7280; margin-bottom: 28px; }
+    .onboard-options {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px;
+    }
+    .onboard-opt {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 18px 16px; cursor: pointer;
+      transition: all 0.2s; text-align: center;
+    }
+    .onboard-opt:hover { border-color:rgba(99,102,241,0.4); background:rgba(99,102,241,0.07); }
+    .onboard-opt.selected { border-color:#6366f1; background:rgba(99,102,241,0.15); }
+    .onboard-opt .opt-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .onboard-opt .opt-label { font-size: 0.9rem; font-weight: 600; color: #e0e0e0; }
+    .onboard-opt .opt-desc { font-size: 0.75rem; color: #6b7280; margin-top: 4px; }
+    .onboard-nav {
+      display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px;
+    }
+    .onboard-result { display: none; animation: fadeUp 0.4s ease both; }
+    .onboard-result.active { display: block; }
+    .result-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 100px; padding: 5px 14px; font-size: 0.78rem;
+      color: #a5b4fc; margin-bottom: 20px;
+    }
+    .result-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .result-desc { font-size: 0.92rem; color: #9ca3af; line-height: 1.7; margin-bottom: 24px; }
+    .result-cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin-bottom: 28px;
+    }
+    .result-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 16px;
+    }
+    .result-card .rc-label { font-size: 0.72rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .result-card .rc-value { font-size: 0.95rem; font-weight: 700; color: #a5b4fc; }
+    .onboard-restart { background: none; border: none; color: #6b7280; font-size: 0.82rem; cursor: pointer; text-decoration: underline; }
+    .onboard-restart:hover { color: #9ca3af; }
+
     /* How it works */
     .how-section {
       position: relative; z-index: 10;
@@ -532,6 +595,127 @@
     </div>
   </section>
 
+  <!-- Onboarding -->
+  <section class="onboard-section" id="onboarding">
+    <h2 class="section-title" style="margin-bottom:10px;">Find your <span>learning path</span></h2>
+    <p class="section-sub" style="margin-bottom:32px;">Answer 3 quick questions — get a personalized recommendation</p>
+    <div class="onboard-box">
+      <div class="onboard-progress">
+        <div class="onboard-prog-dot done" id="prog1"></div>
+        <div class="onboard-prog-dot" id="prog2"></div>
+        <div class="onboard-prog-dot" id="prog3"></div>
+      </div>
+
+      <!-- Step 1: Interest -->
+      <div class="onboard-step active" id="step1">
+        <div class="onboard-q">What do you want to build? 🎯</div>
+        <div class="onboard-sub">Pick what excites you most</div>
+        <div class="onboard-options">
+          <div class="onboard-opt" data-val="web" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🌐</div>
+            <div class="opt-label">Websites</div>
+            <div class="opt-desc">HTML, CSS, JS</div>
+          </div>
+          <div class="onboard-opt" data-val="games" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🎮</div>
+            <div class="opt-label">Games</div>
+            <div class="opt-desc">Python, JavaScript</div>
+          </div>
+          <div class="onboard-opt" data-val="apps" onclick="selectOpt(this,1)">
+            <div class="opt-icon">📱</div>
+            <div class="opt-label">Apps</div>
+            <div class="opt-desc">Python, JavaScript</div>
+          </div>
+          <div class="onboard-opt" data-val="ai" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🤖</div>
+            <div class="opt-label">AI & Data</div>
+            <div class="opt-desc">Python, R</div>
+          </div>
+          <div class="onboard-opt" data-val="security" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🔐</div>
+            <div class="opt-label">Cybersecurity</div>
+            <div class="opt-desc">Python, Bash</div>
+          </div>
+          <div class="onboard-opt" data-val="explore" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🔍</div>
+            <div class="opt-label">Just exploring</div>
+            <div class="opt-desc">Not sure yet</div>
+          </div>
+        </div>
+        <div class="onboard-nav">
+          <button class="btn-primary" onclick="nextStep(2)" id="next1" disabled style="opacity:0.4">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Level -->
+      <div class="onboard-step" id="step2">
+        <div class="onboard-q">What's your coding level? 📊</div>
+        <div class="onboard-sub">Be honest — we'll tailor everything for you</div>
+        <div class="onboard-options">
+          <div class="onboard-opt" data-val="beginner" onclick="selectOpt(this,2)">
+            <div class="opt-icon">🌱</div>
+            <div class="opt-label">Complete beginner</div>
+            <div class="opt-desc">Never written code</div>
+          </div>
+          <div class="onboard-opt" data-val="some" onclick="selectOpt(this,2)">
+            <div class="opt-icon">📚</div>
+            <div class="opt-label">Some basics</div>
+            <div class="opt-desc">Know variables, loops</div>
+          </div>
+          <div class="onboard-opt" data-val="intermediate" onclick="selectOpt(this,2)">
+            <div class="opt-icon">⚡</div>
+            <div class="opt-label">Intermediate</div>
+            <div class="opt-desc">Built small projects</div>
+          </div>
+        </div>
+        <div class="onboard-nav">
+          <button class="btn-secondary" onclick="nextStep(1)" style="padding:12px 24px">← Back</button>
+          <button class="btn-primary" onclick="nextStep(3)" id="next2" disabled style="opacity:0.4">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Age -->
+      <div class="onboard-step" id="step3">
+        <div class="onboard-q">How old are you? 🎂</div>
+        <div class="onboard-sub">We'll adjust the difficulty and examples</div>
+        <div class="onboard-options">
+          <div class="onboard-opt" data-val="kid" onclick="selectOpt(this,3)">
+            <div class="opt-icon">🧒</div>
+            <div class="opt-label">Under 12</div>
+          </div>
+          <div class="onboard-opt" data-val="teen" onclick="selectOpt(this,3)">
+            <div class="opt-icon">🎒</div>
+            <div class="opt-label">12 – 17</div>
+          </div>
+          <div class="onboard-opt" data-val="young" onclick="selectOpt(this,3)">
+            <div class="opt-icon">🎓</div>
+            <div class="opt-label">18 – 25</div>
+          </div>
+          <div class="onboard-opt" data-val="adult" onclick="selectOpt(this,3)">
+            <div class="opt-icon">💼</div>
+            <div class="opt-label">25+</div>
+          </div>
+        </div>
+        <div class="onboard-nav">
+          <button class="btn-secondary" onclick="nextStep(2)" style="padding:12px 24px">← Back</button>
+          <button class="btn-primary" onclick="showResult()" id="next3" disabled style="opacity:0.4">Get my path 🚀</button>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div class="onboard-result" id="onboard-result">
+        <div class="result-badge">✨ Your personalized learning path</div>
+        <div class="result-title" id="result-title"></div>
+        <div class="result-desc" id="result-desc"></div>
+        <div class="result-cards" id="result-cards"></div>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+          <button class="btn-primary" id="result-btn" onclick="startLearning()">Start learning →</button>
+          <button class="onboard-restart" onclick="restartOnboard()">Start over</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- How it works -->
   <section class="how-section">
     <h2 class="section-title">How it <span>works</span></h2>
@@ -772,6 +956,76 @@
         btn.classList.add('open');
         answer.classList.add('open');
       }
+    }
+
+    // ── Onboarding ──
+    const onboardAnswers = { interest: null, level: null, age: null };
+
+    function selectOpt(el, step) {
+      el.closest('.onboard-options').querySelectorAll('.onboard-opt').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      const key = ['interest','level','age'][step-1];
+      onboardAnswers[key] = el.dataset.val;
+      const btn = document.getElementById('next' + step);
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+    }
+
+    function nextStep(n) {
+      document.querySelectorAll('.onboard-step').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('step' + n);
+      if (target) target.classList.add('active');
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById('prog' + i);
+        if (dot) dot.classList.toggle('done', i <= n);
+      }
+    }
+
+    function showResult() {
+      document.querySelectorAll('.onboard-step').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.onboard-prog-dot').forEach(d => d.classList.add('done'));
+
+      const { interest, level, age } = onboardAnswers;
+      const rec = getRecommendation(interest, level, age);
+
+      document.getElementById('result-title').textContent = rec.title;
+      document.getElementById('result-desc').textContent = rec.desc;
+      document.getElementById('result-cards').innerHTML = `
+        <div class="result-card"><div class="rc-label">Start with</div><div class="rc-value">${rec.lang}</div></div>
+        <div class="result-card"><div class="rc-label">First topic</div><div class="rc-value">${rec.topic}</div></div>
+        <div class="result-card"><div class="rc-label">Difficulty</div><div class="rc-value">${rec.diff}</div></div>
+      `;
+      document.getElementById('result-btn').dataset.prompt = rec.prompt;
+      document.getElementById('onboard-result').classList.add('active');
+    }
+
+    function getRecommendation(interest, level, age) {
+      const isKid = age === 'kid';
+      const isBeginner = level === 'beginner' || level === 'some';
+      const recs = {
+        web:      { lang: 'HTML & CSS', topic: 'Build your first webpage', diff: isKid ? 'Very easy' : isBeginner ? 'Beginner' : 'Intermediate', title: 'Start with Web Development 🌐', desc: 'HTML and CSS are the perfect entry point — you see results instantly in the browser. No setup needed, just start coding!', prompt: `I'm a ${level} interested in web development, age group ${age}. Give me my first lesson — start with HTML basics and show me how to make a simple webpage.` },
+        games:    { lang: isKid ? 'Scratch / Python' : 'Python', topic: isKid ? 'Simple animations' : 'Build a snake game', diff: isBeginner ? 'Beginner' : 'Intermediate', title: 'Game Development awaits 🎮', desc: "Python is great for making games! You'll learn logic, loops and functions while building something fun.", prompt: `I'm a ${level} interested in making games, age group ${age}. Teach me Python starting with game basics — show me how to make a simple game step by step.` },
+        apps:     { lang: 'Python', topic: 'Build a simple app', diff: isBeginner ? 'Beginner' : 'Intermediate', title: 'Build Real Apps 📱', desc: 'Python is the most beginner-friendly language for apps. You\'ll go from basics to building real tools quickly.', prompt: `I'm a ${level} interested in building apps, age group ${age}. Teach me Python starting from the basics, with the goal of building a real app.` },
+        ai:       { lang: 'Python', topic: 'Data & AI basics', diff: isBeginner ? 'Beginner' : 'Intermediate', title: 'Dive into AI & Data Science 🤖', desc: 'Python is the #1 language for AI and data science. You\'ll learn to analyze data and build your first ML model.', prompt: `I'm a ${level} interested in AI and data science, age group ${age}. Teach me Python with a focus on data science — start from the very basics.` },
+        security: { lang: 'Python', topic: 'Scripting basics', diff: isBeginner ? 'Beginner' : 'Intermediate', title: 'Start your Cybersecurity path 🔐', desc: 'Cybersecurity requires solid coding skills. Python scripting is the best starting point before moving into ethical hacking.', prompt: `I'm a ${level} interested in cybersecurity, age group ${age}. Teach me Python scripting basics that are useful for cybersecurity.` },
+        explore:  { lang: 'Python', topic: 'Programming fundamentals', diff: 'Beginner', title: 'Start with Python — perfect choice 🐍', desc: 'Python is the most beginner-friendly language and opens doors to web, AI, games, and more. Great if you\'re not sure yet!', prompt: `I'm a ${level} who wants to explore coding, age group ${age}. Give me a fun introduction to programming using Python.` },
+      };
+      return recs[interest] || recs.explore;
+    }
+
+    function startLearning() {
+      const prompt = document.getElementById('result-btn').dataset.prompt;
+      const input = document.getElementById('chatInput');
+      input.value = prompt;
+      document.getElementById('ai-chat').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => sendMessage(), 600);
+    }
+
+    function restartOnboard() {
+      onboardAnswers.interest = null; onboardAnswers.level = null; onboardAnswers.age = null;
+      document.getElementById('onboard-result').classList.remove('active');
+      document.querySelectorAll('.onboard-opt').forEach(o => o.classList.remove('selected'));
+      ['next1','next2','next3'].forEach(id => { const b = document.getElementById(id); if(b){b.disabled=true;b.style.opacity='0.4';} });
+      nextStep(1);
     }
 
     // ── Language cards → AI chat ──

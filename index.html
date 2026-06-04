@@ -282,6 +282,89 @@
     .pnode-label .nl-title { font-size: 0.78rem; font-weight: 700; color: #e0e0e0; margin-bottom: 2px; }
     .pnode-label .nl-desc { font-size: 0.68rem; color: #6b7280; line-height: 1.35; }
 
+    /* Lesson screen */
+    .llesson-header {
+      padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+    }
+    .llesson-back {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: #9ca3af; padding: 6px 12px; font-size: 0.82rem;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .llesson-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .llesson-title { font-size: 1rem; font-weight: 700; color: #fff; flex: 1; }
+    .llesson-body {
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+      scrollbar-width: thin; scrollbar-color: rgba(99,102,241,0.3) transparent;
+    }
+    .llesson-content {
+      padding: 24px 28px; flex: 1;
+      font-size: 0.9rem; color: #d1d5db; line-height: 1.75;
+    }
+    @media (max-width:520px) { .llesson-content { padding: 18px 16px; } }
+    .llesson-content h3 {
+      font-size: 1rem; font-weight: 700; color: #a5b4fc;
+      margin: 20px 0 10px; display: flex; align-items: center; gap: 6px;
+    }
+    .llesson-content h3:first-child { margin-top: 0; }
+    .llesson-content pre {
+      background: #0d0d14; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px; padding: 16px; overflow-x: auto; margin: 10px 0;
+      font-family: 'Courier New', monospace; font-size: 0.82rem;
+      color: #a6e3a1; line-height: 1.6;
+    }
+    .llesson-content p { margin-bottom: 10px; }
+    .llesson-content strong { color: #e0e0e0; }
+    .ll-loading {
+      display: flex; align-items: center; gap: 10px; color: #6b7280; padding: 20px 0;
+    }
+    .ll-spinner {
+      width: 18px; height: 18px; border: 2px solid rgba(99,102,241,0.3);
+      border-top-color: #6366f1; border-radius: 50%;
+      animation: spin 0.8s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Lesson mini-chat */
+    .llesson-qa {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 20px; background: rgba(0,0,0,0.2);
+    }
+    .llqa-label { font-size: 0.75rem; color: #6b7280; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .llqa-messages { max-height: 180px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .llqa-user {
+      align-self: flex-end; background: rgba(99,102,241,0.2); border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 10px 10px 2px 10px; padding: 8px 12px; font-size: 0.83rem; color: #e0e0e0; max-width: 85%;
+    }
+    .llqa-ai {
+      align-self: flex-start; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px 10px 10px 2px; padding: 8px 12px; font-size: 0.83rem; color: #d1d5db;
+      max-width: 90%; line-height: 1.5; white-space: pre-wrap;
+    }
+    .llqa-ai pre { background: #0d0d14; border-radius: 6px; padding: 8px; font-size: 0.78rem; color: #a6e3a1; overflow-x: auto; }
+    .llqa-typing { color: #6b7280; font-style: italic; }
+    .llqa-row { display: flex; gap: 8px; }
+    .llqa-row input {
+      flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 9px 14px; color: #e0e0e0; font-size: 0.85rem; outline: none;
+    }
+    .llqa-row input:focus { border-color: rgba(99,102,241,0.4); }
+    .llqa-row input::placeholder { color: #4b5563; }
+    .llqa-send {
+      background: linear-gradient(135deg,#6366f1,#a855f7); border: none;
+      border-radius: 8px; padding: 9px 16px; color: #fff; font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; white-space: nowrap; transition: opacity 0.2s;
+    }
+    .llqa-send:hover { opacity: 0.85; }
+    .llqa-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Done bar */
+    .llesson-done-bar {
+      padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex; gap: 10px; flex-shrink: 0; background: #111118;
+    }
+
     /* Onboarding */
     .onboard-section {
       position: relative; z-index: 10;
@@ -1703,22 +1786,131 @@
       }
     }
 
-    function startLesson(lang, index, lesson, prog) {
-      // Mark previous nodes as done
-      const newDone = [];
-      for (let i = 0; i < index; i++) newDone.push(i);
-      const newProg = { done: newDone, current: index };
-      saveProgress(lang, newProg);
+    let currentLesson = null;
 
-      closeLearnModal();
-      const levelStr = learnLevel === 'beginner' ? 'complete beginner' :
-                       learnLevel === 'some'      ? 'beginner with some basics' : 'intermediate learner';
+    function startLesson(lang, index, lesson, prog) {
+      const newProg = { done: prog.done.filter(i => i < index), current: index };
+      saveProgress(lang, newProg);
+      currentLesson = { lang, index, lesson, prog: newProg };
+
+      document.getElementById('llTitle').textContent = lesson.icon + ' ' + lesson.title;
+      document.getElementById('llBadge').textContent = LANG_META[lang].icon + ' ' + LANG_META[lang].name;
+      document.getElementById('llContent').innerHTML = '<div class="ll-loading"><div class="ll-spinner"></div> Loading your lesson…</div>';
+      document.getElementById('llQaMsgs').innerHTML = '';
+      goLs(4);
+      fetchLesson(lang, lesson);
+    }
+
+    async function fetchLesson(lang, lesson) {
       const langName = LANG_META[lang].name;
-      const prompt = `Teach me "${lesson.title}" in ${langName}. I am a ${levelStr}. Give me a clear explanation with practical examples, then a small exercise to practice.`;
-      const input = document.getElementById('chatInput');
-      input.value = prompt;
-      document.getElementById('ai-chat').scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => sendMessage(), 500);
+      const codeLang = { html: 'html', cpp: 'cpp', sql: 'sql', rust: 'rust', java: 'java', javascript: 'javascript', python: 'python' }[lang] || lang;
+      const levelStr = learnLevel === 'beginner' ? 'complete beginner' : learnLevel === 'some' ? 'beginner with some basics' : 'intermediate';
+      const prompt = `You are a coding tutor. Teach the topic "${lesson.title}" in ${langName} to a ${levelStr}.
+
+Respond in this exact format:
+
+## 📖 Explanation
+[2-3 short paragraphs explaining the concept clearly]
+
+## 💻 Code Example
+\`\`\`${codeLang}
+[a short, working code example]
+\`\`\`
+
+## 🎯 Try It Yourself
+[One simple exercise the student can attempt]
+
+Be concise, practical, and beginner-friendly.`;
+
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer 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' },
+          body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }] })
+        });
+        const data = await res.json();
+        const text = data.choices?.[0]?.message?.content || 'Could not load lesson content.';
+        document.getElementById('llContent').innerHTML = mdToHtml(text);
+      } catch {
+        document.getElementById('llContent').innerHTML = '<p style="color:#f38ba8">Could not load lesson. Check your connection and try again.</p>';
+      }
+    }
+
+    function mdToHtml(md) {
+      return md
+        .replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^### (.+)$/gm, '<h4 style="color:#e0e0e0;margin:14px 0 6px;font-size:0.9rem">$1</h4>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`([^`]+)`/g, '<code style="background:#1e1e2e;padding:2px 6px;border-radius:4px;font-family:monospace;color:#cba6f7">$1</code>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/^(?!<[ph])/gm, '')
+        .replace(/^<p>(<h[34]>)/, '$1')
+        .replace(/(<\/h[34]>)<\/p>/, '$1');
+    }
+
+    async function sendLessonQ() {
+      const input = document.getElementById('llQaInput');
+      const q = input.value.trim();
+      if (!q || !currentLesson) return;
+      input.value = '';
+      const send = document.getElementById('llQaSend');
+      send.disabled = true;
+
+      const msgs = document.getElementById('llQaMsgs');
+      const userDiv = document.createElement('div');
+      userDiv.className = 'llqa-user'; userDiv.textContent = q;
+      const aiDiv = document.createElement('div');
+      aiDiv.className = 'llqa-ai llqa-typing'; aiDiv.textContent = '…';
+      msgs.append(userDiv, aiDiv);
+      msgs.scrollTop = msgs.scrollHeight;
+
+      const { lang, lesson } = currentLesson;
+      const langName = LANG_META[lang].name;
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer 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' },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              { role: 'system', content: `You are a coding tutor answering questions about "${lesson.title}" in ${langName}. Be brief and clear. Use code examples when helpful.` },
+              { role: 'user', content: q }
+            ]
+          })
+        });
+        const data = await res.json();
+        const reply = data.choices?.[0]?.message?.content || 'No answer.';
+        aiDiv.classList.remove('llqa-typing');
+        aiDiv.innerHTML = mdToHtml(reply);
+      } catch {
+        aiDiv.classList.remove('llqa-typing');
+        aiDiv.textContent = 'Error. Try again.';
+      }
+      send.disabled = false;
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function markLessonDone() {
+      if (!currentLesson) return;
+      const { lang, index, prog } = currentLesson;
+      const curriculum = CURRICULUM[lang];
+      if (!prog.done.includes(index)) prog.done.push(index);
+      const next = index + 1;
+      prog.current = next < curriculum.length ? next : index;
+      saveProgress(lang, prog);
+      renderPath(lang, curriculum, prog, learnLevel);
+      goLs(3);
+      if (next < curriculum.length) {
+        setTimeout(() => startLesson(lang, next, curriculum[next], prog), 300);
+      }
+    }
+
+    function backToPath() {
+      if (!currentLesson) return goLs(3);
+      const { lang, prog } = currentLesson;
+      renderPath(lang, CURRICULUM[lang], prog, learnLevel);
+      goLs(3);
     }
 
     // Close modal on background click
@@ -1806,6 +1998,32 @@
       </div>
       <div class="lpath-scroll">
         <div class="lpath-container" id="lpathContainer"></div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Lesson view -->
+    <div class="lscreen" id="ls4" style="display:none;flex-direction:column;height:100%">
+      <div class="llesson-header">
+        <button class="llesson-back" onclick="backToPath()">← Path</button>
+        <div class="llesson-title" id="llTitle">Lesson</div>
+        <div class="lpath-lang-badge" id="llBadge" style="flex-shrink:0"></div>
+      </div>
+      <div class="llesson-body">
+        <div class="llesson-content" id="llContent">
+          <div class="ll-loading"><div class="ll-spinner"></div> Loading your lesson…</div>
+        </div>
+        <div class="llesson-qa">
+          <div class="llqa-label">Questions about this topic</div>
+          <div class="llqa-messages" id="llQaMsgs"></div>
+          <div class="llqa-row">
+            <input id="llQaInput" placeholder="Ask anything about this lesson…" onkeydown="if(event.key==='Enter')sendLessonQ()">
+            <button class="llqa-send" id="llQaSend" onclick="sendLessonQ()">Ask</button>
+          </div>
+        </div>
+      </div>
+      <div class="llesson-done-bar">
+        <button class="btn-primary" onclick="markLessonDone()" style="flex:1">✓ Done — next lesson</button>
+        <button class="btn-secondary" onclick="backToPath()" style="padding:12px 20px">Back to path</button>
       </div>
     </div>
   </div>

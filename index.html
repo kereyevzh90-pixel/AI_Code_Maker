@@ -559,13 +559,21 @@
       text-transform: uppercase; padding: 10px 16px 6px;
       background: #0e0e15; border-bottom: 1px solid rgba(255,255,255,0.04);
     }
+    .line-nums {
+      background: #0a0a0f; border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 10px 16px 8px; font-family: 'Courier New', monospace;
+      font-size: 0.85rem; line-height: 1.7; color: #3d4451;
+      text-align: right; user-select: none; overflow: hidden;
+      min-width: 40px; flex-shrink: 0;
+    }
+    .line-nums span { display: block; }
+    .line-nums span.err-ln { color: #f38ba8; background: rgba(243,56,80,0.15); border-radius: 3px; }
     .code-editor {
-      width: 100%; min-height: 340px;
+      width: 100%; min-height: 340px; flex: 1;
       background: #0d0d14; border: none;
-      border-right: 1px solid rgba(255,255,255,0.06);
       color: #cdd6f4; font-family: 'Courier New', monospace;
       font-size: 0.85rem; line-height: 1.7; padding: 16px;
-      outline: none; resize: vertical; tab-size: 4;
+      outline: none; resize: none; tab-size: 4;
     }
     .code-editor:focus { background: #0f0f16; }
     .output-pane { display: flex; flex-direction: column; position: relative; }
@@ -1211,9 +1219,12 @@
         <button class="run-btn" id="runBtn" onclick="runCode()">&#9654; Run</button>
       </div>
       <div class="playground-panes">
-        <div>
+        <div style="display:flex;flex-direction:column;">
           <div class="pane-label">Code</div>
-          <textarea class="code-editor" id="codeEditor" spellcheck="false" placeholder="Write your code here..."></textarea>
+          <div style="display:flex;flex:1;overflow:hidden;">
+            <div class="line-nums" id="lineNums">1</div>
+            <textarea class="code-editor" id="codeEditor" spellcheck="false" placeholder="Write your code here..."></textarea>
+          </div>
         </div>
         <div class="output-pane" id="outputPane">
           <div class="pane-label">Output</div>
@@ -1527,7 +1538,34 @@
     const codeEditorEl = document.getElementById('codeEditor');
     const outputEl     = document.getElementById('outputContent');
     const runBtnEl     = document.getElementById('runBtn');
+    const lineNumsEl   = document.getElementById('lineNums');
+
+    function updateLineNums(errLine = null) {
+      const count = (codeEditorEl.value.match(/\n/g) || []).length + 1;
+      lineNumsEl.innerHTML = Array.from({ length: count }, (_, i) => {
+        const n = i + 1;
+        return `<span${errLine === n ? ' class="err-ln"' : ''}>${n}</span>`;
+      }).join('');
+    }
+
+    function parseErrLine(msg) {
+      const m = msg.match(/line (\d+)/i);
+      return m ? parseInt(m[1]) : null;
+    }
+
+    codeEditorEl.addEventListener('input', () => updateLineNums());
+    codeEditorEl.addEventListener('scroll', () => { lineNumsEl.scrollTop = codeEditorEl.scrollTop; });
+    codeEditorEl.addEventListener('keydown', e => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const s = codeEditorEl.selectionStart;
+        codeEditorEl.value = codeEditorEl.value.slice(0, s) + '    ' + codeEditorEl.value.slice(codeEditorEl.selectionEnd);
+        codeEditorEl.selectionStart = codeEditorEl.selectionEnd = s + 4;
+        updateLineNums();
+      }
+    });
     codeEditorEl.value = STARTERS[currentLang];
+    updateLineNums();
 
     codeEditorEl.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
@@ -1543,9 +1581,10 @@
       document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
       codeEditorEl.value = STARTERS[lang];
+      updateLineNums();
       clearOutput();
     }
-    function clearEditor() { codeEditorEl.value = ''; clearOutput(); }
+    function clearEditor() { codeEditorEl.value = ''; updateLineNums(); clearOutput(); }
     function clearOutput() {
       const pane = document.getElementById('outputPane');
       const existing = pane.querySelector('iframe.output-iframe');
@@ -1593,9 +1632,12 @@
         }
         const stdout = py.runPython('sys.stdout.getvalue()');
         const errout = py.runPython('sys.stderr.getvalue()') || stderr;
+        const errLine = errout ? parseErrLine(errout) : null;
+        updateLineNums(errLine);
         outputEl.className = 'output-content' + (errout ? ' has-error' : '');
         outputEl.textContent = (stdout + (errout ? '\n' + errout : '')).trim() || '(no output)';
       } catch (err) {
+        updateLineNums(parseErrLine(err.message));
         outputEl.className = 'output-content has-error';
         outputEl.textContent = 'Error: ' + err.message;
       }

@@ -606,40 +606,50 @@
         <div class="onboard-prog-dot" id="prog3"></div>
       </div>
 
-      <!-- Step 1: Interest -->
+      <!-- Step 1: Language -->
       <div class="onboard-step active" id="step1">
-        <div class="onboard-q">What do you want to build? 🎯</div>
-        <div class="onboard-sub">Pick what excites you most</div>
-        <div class="onboard-options">
-          <div class="onboard-opt" data-val="web" onclick="selectOpt(this,1)">
-            <div class="opt-icon">🌐</div>
-            <div class="opt-label">Websites</div>
-            <div class="opt-desc">HTML, CSS, JS</div>
+        <div class="onboard-q">Which language interests you? 💻</div>
+        <div class="onboard-sub">Each language opens different doors — pick the one that sparks curiosity</div>
+        <div class="onboard-options" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+          <div class="onboard-opt" data-val="python" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🐍</div>
+            <div class="opt-label">Python</div>
+            <div class="opt-desc">AI, data science, games, automation — the most beginner-friendly language</div>
           </div>
-          <div class="onboard-opt" data-val="games" onclick="selectOpt(this,1)">
-            <div class="opt-icon">🎮</div>
-            <div class="opt-label">Games</div>
-            <div class="opt-desc">Python, JavaScript</div>
+          <div class="onboard-opt" data-val="javascript" onclick="selectOpt(this,1)">
+            <div class="opt-icon">⚡</div>
+            <div class="opt-label">JavaScript</div>
+            <div class="opt-desc">Websites, web apps, browser games — runs everywhere without setup</div>
           </div>
-          <div class="onboard-opt" data-val="apps" onclick="selectOpt(this,1)">
-            <div class="opt-icon">📱</div>
-            <div class="opt-label">Apps</div>
-            <div class="opt-desc">Python, JavaScript</div>
+          <div class="onboard-opt" data-val="html" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🎨</div>
+            <div class="opt-label">HTML & CSS</div>
+            <div class="opt-desc">Web design and pages — see results instantly in the browser</div>
           </div>
-          <div class="onboard-opt" data-val="ai" onclick="selectOpt(this,1)">
-            <div class="opt-icon">🤖</div>
-            <div class="opt-label">AI & Data</div>
-            <div class="opt-desc">Python, R</div>
+          <div class="onboard-opt" data-val="java" onclick="selectOpt(this,1)">
+            <div class="opt-icon">☕</div>
+            <div class="opt-label">Java</div>
+            <div class="opt-desc">Android apps, enterprise software — structured and widely used in companies</div>
           </div>
-          <div class="onboard-opt" data-val="security" onclick="selectOpt(this,1)">
-            <div class="opt-icon">🔐</div>
-            <div class="opt-label">Cybersecurity</div>
-            <div class="opt-desc">Python, Bash</div>
+          <div class="onboard-opt" data-val="cpp" onclick="selectOpt(this,1)">
+            <div class="opt-icon">⚙️</div>
+            <div class="opt-label">C++</div>
+            <div class="opt-desc">Game engines, high performance apps, systems — fast and powerful</div>
           </div>
-          <div class="onboard-opt" data-val="explore" onclick="selectOpt(this,1)">
-            <div class="opt-icon">🔍</div>
-            <div class="opt-label">Just exploring</div>
-            <div class="opt-desc">Not sure yet</div>
+          <div class="onboard-opt" data-val="sql" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🗄️</div>
+            <div class="opt-label">SQL</div>
+            <div class="opt-desc">Databases, data analysis — used in every company that stores data</div>
+          </div>
+          <div class="onboard-opt" data-val="rust" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🦀</div>
+            <div class="opt-label">Rust</div>
+            <div class="opt-desc">Systems programming, WebAssembly — ultra-fast and safe memory management</div>
+          </div>
+          <div class="onboard-opt" data-val="notsure" onclick="selectOpt(this,1)">
+            <div class="opt-icon">🤔</div>
+            <div class="opt-label">Not sure yet</div>
+            <div class="opt-desc">Tell us your goals — we'll recommend the best language for you</div>
           </div>
         </div>
         <div class="onboard-nav">
@@ -984,8 +994,8 @@
       document.querySelectorAll('.onboard-step').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.onboard-prog-dot').forEach(d => d.classList.add('done'));
 
-      const { interest, level, age } = onboardAnswers;
-      const rec = getRecommendation(interest, level, age);
+      const { interest: lang, level, age } = onboardAnswers;
+      const rec = getRecommendation(lang, level, age);
 
       document.getElementById('result-title').textContent = rec.title;
       document.getElementById('result-desc').textContent = rec.desc;
@@ -998,18 +1008,21 @@
       document.getElementById('onboard-result').classList.add('active');
     }
 
-    function getRecommendation(interest, level, age) {
+    function getRecommendation(lang, level, age) {
       const isKid = age === 'kid';
       const isBeginner = level === 'beginner' || level === 'some';
+      const diff = isKid ? 'Very easy' : isBeginner ? 'Beginner' : 'Intermediate';
       const recs = {
-        web:      { lang: 'HTML & CSS', topic: 'Build your first webpage', diff: isKid ? 'Very easy' : isBeginner ? 'Beginner' : 'Intermediate', title: 'Start with Web Development 🌐', desc: 'HTML and CSS are the perfect entry point — you see results instantly in the browser. No setup needed, just start coding!', prompt: `I'm a ${level} interested in web development, age group ${age}. Give me my first lesson — start with HTML basics and show me how to make a simple webpage.` },
-        games:    { lang: isKid ? 'Scratch / Python' : 'Python', topic: isKid ? 'Simple animations' : 'Build a snake game', diff: isBeginner ? 'Beginner' : 'Intermediate', title: 'Game Development awaits 🎮', desc: "Python is great for making games! You'll learn logic, loops and functions while building something fun.", prompt: `I'm a ${level} interested in making games, age group ${age}. Teach me Python starting with game basics — show me how to make a simple game step by step.` },
-        apps:     { lang: 'Python', topic: 'Build a simple app', diff: isBeginner ? 'Beginner' : 'Intermediate', title: 'Build Real Apps 📱', desc: 'Python is the most beginner-friendly language for apps. You\'ll go from basics to building real tools quickly.', prompt: `I'm a ${level} interested in building apps, age group ${age}. Teach me Python starting from the basics, with the goal of building a real app.` },
-        ai:       { lang: 'Python', topic: 'Data & AI basics', diff: isBeginner ? 'Beginner' : 'Intermediate', title: 'Dive into AI & Data Science 🤖', desc: 'Python is the #1 language for AI and data science. You\'ll learn to analyze data and build your first ML model.', prompt: `I'm a ${level} interested in AI and data science, age group ${age}. Teach me Python with a focus on data science — start from the very basics.` },
-        security: { lang: 'Python', topic: 'Scripting basics', diff: isBeginner ? 'Beginner' : 'Intermediate', title: 'Start your Cybersecurity path 🔐', desc: 'Cybersecurity requires solid coding skills. Python scripting is the best starting point before moving into ethical hacking.', prompt: `I'm a ${level} interested in cybersecurity, age group ${age}. Teach me Python scripting basics that are useful for cybersecurity.` },
-        explore:  { lang: 'Python', topic: 'Programming fundamentals', diff: 'Beginner', title: 'Start with Python — perfect choice 🐍', desc: 'Python is the most beginner-friendly language and opens doors to web, AI, games, and more. Great if you\'re not sure yet!', prompt: `I'm a ${level} who wants to explore coding, age group ${age}. Give me a fun introduction to programming using Python.` },
+        python:     { lang: 'Python', topic: isBeginner ? 'Variables & functions' : 'OOP & projects', diff, title: 'Great choice — Python is king 🐍', desc: "Python is the most beginner-friendly language. You'll learn fast and can build AI, games, web apps and automation scripts.", prompt: `I'm a ${level} learning Python, age group ${age}. Start my first lesson — explain variables, data types and a simple function with examples.` },
+        javascript: { lang: 'JavaScript', topic: isBeginner ? 'DOM basics & events' : 'Async & APIs', diff, title: "JavaScript — the web's language ⚡", desc: "JavaScript runs in every browser — no setup needed. You'll build interactive websites and games right away.", prompt: `I'm a ${level} learning JavaScript, age group ${age}. Give me my first lesson — explain how JavaScript works in the browser with a simple interactive example.` },
+        html:       { lang: 'HTML & CSS', topic: 'Build your first webpage', diff: isKid ? 'Very easy' : 'Beginner', title: 'Start with HTML & CSS 🎨', desc: 'The fastest way to see real results — build and style web pages that look great. No setup, just open in a browser.', prompt: `I'm a ${level} learning HTML and CSS, age group ${age}. Teach me how to build a simple webpage from scratch with a nice design.` },
+        java:       { lang: 'Java', topic: isBeginner ? 'Classes & objects' : 'Collections & design patterns', diff, title: 'Java — solid and professional ☕', desc: 'Java is used in Android apps and big company systems. Strict syntax teaches you good habits from day one.', prompt: `I'm a ${level} learning Java, age group ${age}. Give me a clear first lesson on Java — explain classes and how to write a simple program.` },
+        cpp:        { lang: 'C++', topic: isBeginner ? 'Pointers & memory' : 'Data structures', diff: isBeginner ? 'Intermediate' : 'Advanced', title: 'C++ — power and performance ⚙️', desc: 'C++ is used in game engines, operating systems and high-performance apps. Challenging but very rewarding.', prompt: `I'm a ${level} learning C++, age group ${age}. Explain C++ basics clearly — variables, pointers and memory management with examples.` },
+        sql:        { lang: 'SQL', topic: isBeginner ? 'SELECT queries' : 'JOINs & aggregations', diff, title: 'SQL — the language of data 🗄️', desc: 'SQL is used in every company. You can query and analyze massive datasets with just a few lines.', prompt: `I'm a ${level} learning SQL, age group ${age}. Teach me SQL from the beginning — explain SELECT, WHERE and basic queries with examples.` },
+        rust:       { lang: 'Rust', topic: isBeginner ? 'Ownership & borrowing' : 'Lifetimes & traits', diff: isBeginner ? 'Intermediate' : 'Advanced', title: 'Rust — the future of systems 🦀', desc: "Rust is blazing fast and prevents entire classes of bugs at compile time. It's challenging but one of the most loved languages.", prompt: `I'm a ${level} learning Rust, age group ${age}. Explain Rust's core concepts — ownership and borrowing — as simply as possible with clear examples.` },
+        notsure:    { lang: 'Python', topic: 'Programming fundamentals', diff: 'Beginner', title: "We recommend Python — perfect start 🐍", desc: "Python is the most beginner-friendly language and opens doors to web, AI, games and automation. The best first language.", prompt: `I'm a ${level} who is not sure which programming language to learn, age group ${age}. Help me get started with Python and explain why it's a great first language.` },
       };
-      return recs[interest] || recs.explore;
+      return recs[lang] || recs.notsure;
     }
 
     function startLearning() {

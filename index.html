@@ -1950,10 +1950,10 @@
       const container = document.getElementById('lpathContainer');
       container.innerHTML = '';
 
-      const NODE = 68, VGAP = 118, AMP = 110;
-      const containerW = Math.min(container.parentElement.clientWidth - 40, 420);
+      const NODE = 68, VGAP = 140, AMP = 80;
+      const containerW = Math.min(container.parentElement.clientWidth - 20, 460);
       const center = containerW / 2 - NODE / 2;
-      const totalH = VGAP * curriculum.length + 60;
+      const totalH = VGAP * curriculum.length + 80;
 
       container.style.width = containerW + 'px';
       container.style.height = totalH + 'px';
@@ -1967,17 +1967,17 @@
       let d = '';
       for (let i = 0; i < curriculum.length; i++) {
         const cx = center + NODE/2 + Math.round(Math.sin(i * Math.PI / 4) * AMP);
-        const cy = 20 + i * VGAP + NODE/2;
+        const cy = 30 + i * VGAP + NODE/2;
         if (i === 0) { d += `M ${cx} ${cy}`; continue; }
         const px = center + NODE/2 + Math.round(Math.sin((i-1) * Math.PI / 4) * AMP);
-        const py = 20 + (i-1) * VGAP + NODE/2;
+        const py = 30 + (i-1) * VGAP + NODE/2;
         const mcy = (py + cy) / 2;
         d += ` C ${px} ${mcy}, ${cx} ${mcy}, ${cx} ${cy}`;
       }
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       path.setAttribute('d', d);
       path.setAttribute('fill', 'none');
-      path.setAttribute('stroke', 'rgba(99,102,241,0.18)');
+      path.setAttribute('stroke', 'rgba(99,102,241,0.2)');
       path.setAttribute('stroke-width', '5');
       path.setAttribute('stroke-dasharray', '10 7');
       svg.appendChild(path);
@@ -1992,21 +1992,21 @@
       for (let i = 0; i < curriculum.length; i++) {
         const lesson = curriculum[i];
         const nodeX = center + Math.round(Math.sin(i * Math.PI / 4) * AMP);
-        const nodeY = 20 + i * VGAP;
-        const isRight = nodeX > center;
+        const nodeY = 30 + i * VGAP;
 
         let state;
         if (prog.done.includes(i)) state = 'done';
         else if (i === prog.current) state = 'current';
         else if (level === 'intermediate') state = 'unlocked';
-        else if (i === prog.current + 1 && state !== 'done') state = 'unlocked';
+        else if (i === prog.current + 1) state = 'unlocked';
         else state = 'locked';
 
         const wrap = document.createElement('div');
-        wrap.style.cssText = `position:absolute;left:${nodeX}px;top:${nodeY}px;width:${NODE}px;height:${NODE}px`;
+        wrap.style.cssText = `position:absolute;left:${nodeX}px;top:${nodeY}px;width:${NODE}px;text-align:center`;
 
         const btn = document.createElement('button');
         btn.className = `pnode-btn state-${state}`;
+        btn.style.position = 'relative';
         btn.innerHTML = state === 'done' ? '✓' : lesson.icon;
         btn.title = lesson.title;
         if (state !== 'locked') {
@@ -2014,10 +2014,8 @@
         }
 
         const lbl = document.createElement('div');
-        lbl.className = 'pnode-label';
-        lbl.style[isRight ? 'right' : 'left'] = (NODE + 14) + 'px';
-        lbl.style.textAlign = isRight ? 'right' : 'left';
-        lbl.innerHTML = `<div class="nl-title">${lesson.title}</div><div class="nl-desc">${lesson.desc}</div>`;
+        lbl.style.cssText = 'margin-top:6px;font-size:0.72rem;font-weight:700;color:#c4c9d4;line-height:1.3;white-space:nowrap;text-align:center';
+        lbl.textContent = lesson.title;
 
         wrap.appendChild(btn);
         wrap.appendChild(lbl);

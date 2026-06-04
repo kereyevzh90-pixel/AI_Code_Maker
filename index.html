@@ -747,6 +747,7 @@
     .footer-links a:hover { color: #9ca3af; }
     .footer-copy { color: #374151; font-size: 0.78rem; width: 100%; text-align: center; margin-top: 24px; }
   </style>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.27.5/full/pyodide.js"></script>
 </head>
 <body>
 
@@ -1571,21 +1572,29 @@
       if (currentLang === 'json') { runJSON(code); runBtnEl.disabled = false; return; }
       if (currentLang === 'javascript') { runJS(code); runBtnEl.disabled = false; return; }
       if (currentLang === 'game') { runGame(code); runBtnEl.disabled = false; return; }
-      // Python
-      outputEl.innerHTML = '<span class="output-running">Running Python...</span>';
-      outputEl.style.display = '';
+      // Python via Pyodide
       const pane = document.getElementById('outputPane');
       const existing = pane.querySelector('iframe.output-iframe');
       if (existing) existing.remove();
+      outputEl.style.display = '';
+      outputEl.className = 'output-content';
+      outputEl.innerHTML = '<span class="output-running">Loading Python runtime…</span>';
       try {
-        const res = await fetch('https://emkc.org/api/v2/piston/execute', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ language: 'python', version: '3.10.0', files: [{ name: 'main.py', content: code }] })
-        });
-        const data = await res.json();
-        const out = (data.run?.stdout || '') + (data.run?.stderr || '');
-        outputEl.className = 'output-content' + (data.run?.stderr ? ' has-error' : '');
-        outputEl.textContent = out || '(no output)';
+        if (!window._pyodide) {
+          window._pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.5/full/' });
+        }
+        const py = window._pyodide;
+        py.runPython('import sys, io\nsys.stdout = io.StringIO()\nsys.stderr = io.StringIO()');
+        let stderr = '';
+        try {
+          py.runPython(code);
+        } catch(e) {
+          stderr = e.message;
+        }
+        const stdout = py.runPython('sys.stdout.getvalue()');
+        const errout = py.runPython('sys.stderr.getvalue()') || stderr;
+        outputEl.className = 'output-content' + (errout ? ' has-error' : '');
+        outputEl.textContent = (stdout + (errout ? '\n' + errout : '')).trim() || '(no output)';
       } catch (err) {
         outputEl.className = 'output-content has-error';
         outputEl.textContent = 'Error: ' + err.message;

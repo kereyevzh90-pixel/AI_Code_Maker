@@ -1609,7 +1609,7 @@
     }
 
     function runJS(code) {
-      const escaped = code.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+      const safeCode = JSON.stringify(code);
       const html = `<!DOCTYPE html><html><head><style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background:#0a0a0f; color:#cdd6f4; font-family:'Courier New',monospace; font-size:13px; min-height:100vh; }
@@ -1632,7 +1632,7 @@
         console.log = (...a) => _log('', a);
         console.error = (...a) => _log('log-err', a);
         console.warn = (...a) => _log('log-err', a);
-        try { ${code} } catch(e) { _log('log-err', ['Error: ' + e.message]); }
+        try { eval(${safeCode}); } catch(e) { _log('log-err', ['Error: ' + e.message]); }
       <\/script></body></html>`;
       runInIframe(html, false);
     }
@@ -1652,7 +1652,7 @@
         const _co = document.getElementById('_console');
         console.log = (...a) => { _co.textContent = a.join(' '); };
         console.error = (...a) => { _co.style.color='#f38ba8'; _co.textContent = 'Error: ' + a.join(' '); };
-        try { ${code} } catch(e) { _co.style.color='#f38ba8'; _co.textContent='Error: '+e.message; }
+        try { eval(${JSON.stringify(code)}); } catch(e) { _co.style.color='#f38ba8'; _co.textContent='Error: '+e.message; }
       <\/script></body></html>`;
       runInIframe(html, true);
     }

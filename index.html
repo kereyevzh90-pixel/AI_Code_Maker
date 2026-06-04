@@ -171,6 +171,117 @@
     }
     .section-sub { text-align:center; color:#6b7280; font-size:0.9rem; margin-bottom:40px; }
 
+    /* Learning Modal */
+    .learn-modal {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.88);
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+    .learn-modal.open { display: flex; }
+    .learn-inner {
+      background: #111118; border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 24px; width: min(680px, 96vw);
+      max-height: 92vh; display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    }
+    .learn-close {
+      position: absolute; top: 16px; right: 16px; z-index: 10;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: #9ca3af; width: 36px; height: 36px;
+      cursor: pointer; font-size: 1rem; transition: all 0.2s;
+    }
+    .learn-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    .lscreen { display: none; }
+    .lscreen.active { display: block; animation: fadeUp 0.3s ease both; }
+
+    /* Setup screens */
+    .lsetup { padding: 44px 36px 36px; }
+    @media (max-width:520px) { .lsetup { padding: 40px 20px 24px; } }
+    .lsetup-title { font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .lsetup-sub { font-size: 0.88rem; color: #6b7280; margin-bottom: 28px; }
+    .lsetup-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 10px; margin-bottom: 24px;
+    }
+    .lsetup-opt {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 16px 14px; cursor: pointer;
+      transition: all 0.2s; text-align: center;
+    }
+    .lsetup-opt:hover { border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.07); }
+    .lsetup-opt.sel { border-color: #6366f1; background: rgba(99,102,241,0.15); }
+    .lsetup-opt .lo-icon { font-size: 1.6rem; margin-bottom: 6px; }
+    .lsetup-opt .lo-name { font-size: 0.88rem; font-weight: 700; color: #e0e0e0; }
+    .lsetup-opt .lo-desc { font-size: 0.72rem; color: #6b7280; margin-top: 3px; line-height: 1.4; }
+    .lsetup-nav { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
+
+    /* Path header */
+    .lpath-header {
+      padding: 18px 24px 16px; border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; gap: 14px; flex-shrink: 0;
+    }
+    .lpath-lang-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
+      border-radius: 100px; padding: 5px 14px 5px 10px;
+      font-size: 0.82rem; font-weight: 600; color: #a5b4fc;
+    }
+    .lpath-progress-bar {
+      flex: 1; height: 6px; background: rgba(255,255,255,0.07);
+      border-radius: 4px; overflow: hidden;
+    }
+    .lpath-progress-fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, #6366f1, #a855f7);
+      transition: width 0.4s ease;
+    }
+    .lpath-pct { font-size: 0.8rem; color: #6b7280; white-space: nowrap; }
+
+    /* Path scroll area */
+    .lpath-scroll {
+      flex: 1; overflow-y: auto; padding: 28px 20px 60px;
+      scrollbar-width: thin; scrollbar-color: rgba(99,102,241,0.3) transparent;
+    }
+    .lpath-container { position: relative; margin: 0 auto; }
+
+    /* Node button */
+    .pnode-btn {
+      position: absolute; width: 68px; height: 68px;
+      border-radius: 50%; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pnode-btn.state-done {
+      background: linear-gradient(135deg, #10b981, #059669);
+      box-shadow: 0 4px 16px rgba(16,185,129,0.35);
+    }
+    .pnode-btn.state-current {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      box-shadow: 0 0 30px rgba(99,102,241,0.7);
+      animation: nodePulse 2s ease-in-out infinite;
+    }
+    .pnode-btn.state-unlocked {
+      background: rgba(99,102,241,0.15); border: 2px solid rgba(99,102,241,0.35);
+    }
+    .pnode-btn.state-locked {
+      background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.08);
+      cursor: not-allowed; filter: grayscale(1); opacity: 0.5;
+    }
+    .pnode-btn:not(.state-locked):hover { transform: scale(1.1); }
+    @keyframes nodePulse {
+      0%,100% { box-shadow: 0 0 28px rgba(99,102,241,0.6); }
+      50% { box-shadow: 0 0 48px rgba(99,102,241,1); }
+    }
+
+    /* Node tooltip */
+    .pnode-label {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 130px; pointer-events: none;
+    }
+    .pnode-label .nl-title { font-size: 0.78rem; font-weight: 700; color: #e0e0e0; margin-bottom: 2px; }
+    .pnode-label .nl-desc { font-size: 0.68rem; color: #6b7280; line-height: 1.35; }
+
     /* Onboarding */
     .onboard-section {
       position: relative; z-index: 10;
@@ -569,8 +680,8 @@
       All languages, all levels, completely free.
     </p>
     <div class="cta-group">
-      <button class="btn-primary" onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})">Ask AI Tutor →</button>
-      <button class="btn-secondary" onclick="document.getElementById('playground').scrollIntoView({behavior:'smooth'})">▶ Try Playground</button>
+      <button class="btn-primary" onclick="openLearnModal()">Start Learning 🎓</button>
+      <button class="btn-secondary" onclick="document.getElementById('ai-chat').scrollIntoView({behavior:'smooth'})">Ask AI Tutor →</button>
     </div>
 
     <div class="demo-window">
@@ -719,7 +830,7 @@
         <div class="result-desc" id="result-desc"></div>
         <div class="result-cards" id="result-cards"></div>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-          <button class="btn-primary" id="result-btn" onclick="startLearning()">Start learning →</button>
+          <button class="btn-primary" id="result-btn" onclick="startLearning()">Open learning path 🎓</button>
           <button class="onboard-restart" onclick="restartOnboard()">Start over</button>
         </div>
       </div>
@@ -1026,11 +1137,15 @@
     }
 
     function startLearning() {
-      const prompt = document.getElementById('result-btn').dataset.prompt;
-      const input = document.getElementById('chatInput');
-      input.value = prompt;
-      document.getElementById('ai-chat').scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => sendMessage(), 600);
+      // Pre-select the recommended language in the learning modal
+      const langMap = { 'HTML & CSS': 'html', 'Python': 'python', 'JavaScript': 'javascript', 'Java': 'java', 'C++': 'cpp', 'SQL': 'sql', 'Rust': 'rust' };
+      const recLangName = document.querySelector('#result-cards .rc-value')?.textContent || 'Python';
+      const recLang = langMap[recLangName] || 'python';
+      openLearnModal();
+      setTimeout(() => {
+        const opt = document.querySelector(`#ls1 [data-lang="${recLang}"]`);
+        if (opt) selectLearnLang(opt);
+      }, 100);
     }
 
     function restartOnboard() {
@@ -1319,7 +1434,382 @@
         outputEl.textContent = 'JSON Error: ' + err.message;
       }
     }
+    // ── Learning Path ──
+    const LANG_META = {
+      python:     { icon: '🐍', name: 'Python' },
+      javascript: { icon: '⚡', name: 'JavaScript' },
+      html:       { icon: '🎨', name: 'HTML & CSS' },
+      java:       { icon: '☕', name: 'Java' },
+      cpp:        { icon: '⚙️', name: 'C++' },
+      sql:        { icon: '🗄️', name: 'SQL' },
+      rust:       { icon: '🦀', name: 'Rust' },
+    };
+
+    const CURRICULUM = {
+      python: [
+        { icon:'👋', title:'Hello World', desc:'Print your first line of code' },
+        { icon:'📦', title:'Variables', desc:'Store and label data in memory' },
+        { icon:'🔢', title:'Data Types', desc:'Numbers, strings, booleans' },
+        { icon:'⌨️', title:'User Input', desc:'Read input from the keyboard' },
+        { icon:'🔀', title:'If / Else', desc:'Make decisions in your code' },
+        { icon:'🔄', title:'For Loops', desc:'Repeat actions a set number of times' },
+        { icon:'♾️', title:'While Loops', desc:'Repeat while a condition is true' },
+        { icon:'🧩', title:'Functions', desc:'Write reusable blocks of code' },
+        { icon:'📋', title:'Lists', desc:'Store multiple values in one place' },
+        { icon:'📖', title:'Dictionaries', desc:'Key-value data structures' },
+        { icon:'🔤', title:'String Methods', desc:'Slice, join, format text' },
+        { icon:'📁', title:'Files & I/O', desc:'Read and write files' },
+        { icon:'🏗️', title:'Classes & OOP', desc:'Object-oriented programming' },
+        { icon:'📦', title:'Modules', desc:'Import and use libraries' },
+        { icon:'⚠️', title:'Error Handling', desc:'try / except blocks' },
+        { icon:'🏆', title:'Mini Project', desc:'Build something real!' },
+      ],
+      javascript: [
+        { icon:'👋', title:'Console & Variables', desc:'Your first JS code' },
+        { icon:'🔢', title:'Data Types', desc:'Numbers, strings, booleans, null' },
+        { icon:'➕', title:'Operators', desc:'Math, comparison, logical' },
+        { icon:'🔀', title:'If / Else', desc:'Conditional statements' },
+        { icon:'🔄', title:'Loops', desc:'for, while, forEach' },
+        { icon:'🧩', title:'Functions', desc:'Regular and arrow functions' },
+        { icon:'📋', title:'Arrays', desc:'Lists and array methods' },
+        { icon:'📖', title:'Objects', desc:'Key-value data structures' },
+        { icon:'🌐', title:'DOM Basics', desc:'Manipulate HTML with JS' },
+        { icon:'🖱️', title:'Events', desc:'Click, input, keyboard events' },
+        { icon:'🌍', title:'Fetch & APIs', desc:'Load data from the internet' },
+        { icon:'⏳', title:'Async / Await', desc:'Handle async operations' },
+        { icon:'🏗️', title:'Classes', desc:'OOP in JavaScript' },
+        { icon:'🏆', title:'Mini Project', desc:'Build an interactive app!' },
+      ],
+      html: [
+        { icon:'📄', title:'HTML Structure', desc:'DOCTYPE, head, body basics' },
+        { icon:'📝', title:'Text & Headings', desc:'h1–h6, p, span, strong' },
+        { icon:'🔗', title:'Links & Images', desc:'a, img tags' },
+        { icon:'📋', title:'Lists & Tables', desc:'ul, ol, table' },
+        { icon:'📝', title:'Forms', desc:'input, button, select' },
+        { icon:'🎨', title:'CSS Basics', desc:'Selectors, colors, fonts' },
+        { icon:'📦', title:'Box Model', desc:'margin, padding, border' },
+        { icon:'↔️', title:'Flexbox', desc:'Flexible 1D layouts' },
+        { icon:'🔲', title:'CSS Grid', desc:'Powerful 2D layouts' },
+        { icon:'📱', title:'Responsive Design', desc:'Media queries, mobile-first' },
+        { icon:'✨', title:'Animations', desc:'Transitions and keyframes' },
+        { icon:'🏆', title:'Mini Project', desc:'Build a full webpage!' },
+      ],
+      java: [
+        { icon:'👋', title:'Hello World', desc:'Your first Java program' },
+        { icon:'📦', title:'Variables & Types', desc:'int, String, double, boolean' },
+        { icon:'➕', title:'Operators', desc:'Math, comparison, logic' },
+        { icon:'🔀', title:'If / Else', desc:'Conditional statements' },
+        { icon:'🔄', title:'Loops', desc:'for, while, do-while' },
+        { icon:'🧩', title:'Methods', desc:'Reusable blocks of code' },
+        { icon:'📋', title:'Arrays', desc:'Fixed-size collections' },
+        { icon:'🏗️', title:'Classes & Objects', desc:'OOP fundamentals' },
+        { icon:'🧬', title:'Inheritance', desc:'Extend and override classes' },
+        { icon:'🔌', title:'Interfaces', desc:'Contracts for classes' },
+        { icon:'📦', title:'Collections', desc:'ArrayList, HashMap' },
+        { icon:'⚠️', title:'Exceptions', desc:'try / catch error handling' },
+        { icon:'🏆', title:'Mini Project', desc:'Build a Java application!' },
+      ],
+      cpp: [
+        { icon:'👋', title:'Hello World', desc:'Your first C++ program' },
+        { icon:'📦', title:'Variables & Types', desc:'int, float, char, bool' },
+        { icon:'➕', title:'Operators', desc:'Arithmetic and logic' },
+        { icon:'🔀', title:'If / Else & Switch', desc:'Control flow statements' },
+        { icon:'🔄', title:'Loops', desc:'for, while, do-while' },
+        { icon:'🧩', title:'Functions', desc:'Declare, define, call' },
+        { icon:'🔑', title:'Pointers', desc:'Memory addresses & references' },
+        { icon:'📋', title:'Arrays', desc:'Fixed collections in memory' },
+        { icon:'🏗️', title:'Classes & OOP', desc:'Objects in C++' },
+        { icon:'🧬', title:'Inheritance', desc:'Extend classes' },
+        { icon:'📦', title:'STL', desc:'vectors, maps, algorithms' },
+        { icon:'⚠️', title:'Memory Management', desc:'new, delete, RAII' },
+        { icon:'🏆', title:'Mini Project', desc:'Build a C++ program!' },
+      ],
+      sql: [
+        { icon:'🗄️', title:'What is SQL?', desc:'Databases, tables, rows' },
+        { icon:'🔍', title:'SELECT', desc:'Query data from tables' },
+        { icon:'🔎', title:'WHERE', desc:'Filter rows with conditions' },
+        { icon:'📊', title:'ORDER BY', desc:'Sort your results' },
+        { icon:'🔢', title:'Aggregate Functions', desc:'COUNT, SUM, AVG, MAX, MIN' },
+        { icon:'📁', title:'GROUP BY', desc:'Group data for analysis' },
+        { icon:'🔗', title:'JOINs', desc:'Combine multiple tables' },
+        { icon:'➕', title:'INSERT', desc:'Add new data to tables' },
+        { icon:'✏️', title:'UPDATE', desc:'Modify existing records' },
+        { icon:'🗑️', title:'DELETE', desc:'Remove records safely' },
+        { icon:'🏗️', title:'CREATE TABLE', desc:'Design your own tables' },
+        { icon:'🏆', title:'Mini Project', desc:'Build a real database!' },
+      ],
+      rust: [
+        { icon:'👋', title:'Hello World', desc:'Your first Rust program' },
+        { icon:'📦', title:'Variables', desc:'let, mut, const' },
+        { icon:'🔢', title:'Data Types', desc:'Scalars and compounds' },
+        { icon:'🧩', title:'Functions', desc:'fn keyword and return values' },
+        { icon:'🔀', title:'Control Flow', desc:'if, loop, while, for' },
+        { icon:'🔑', title:'Ownership', desc:'The core Rust concept' },
+        { icon:'📎', title:'Borrowing', desc:'References and slices' },
+        { icon:'📋', title:'Structs', desc:'Custom data types' },
+        { icon:'🔌', title:'Enums', desc:'Sum types + pattern matching' },
+        { icon:'📦', title:'Modules', desc:'Organize your code' },
+        { icon:'⚠️', title:'Error Handling', desc:'Result and Option types' },
+        { icon:'🏆', title:'Mini Project', desc:'Build a Rust program!' },
+      ],
+    };
+
+    let learnLang = null, learnLevel = null;
+
+    function openLearnModal() {
+      learnLang = null; learnLevel = null;
+      document.querySelectorAll('.lsetup-opt').forEach(o => o.classList.remove('sel'));
+      document.getElementById('ls1next').disabled = true;
+      document.getElementById('ls1next').style.opacity = '0.4';
+      document.getElementById('ls2next').disabled = true;
+      document.getElementById('ls2next').style.opacity = '0.4';
+      goLs(1);
+      document.getElementById('learnModal').classList.add('open');
+    }
+
+    function closeLearnModal() {
+      document.getElementById('learnModal').classList.remove('open');
+    }
+
+    function goLs(n) {
+      document.querySelectorAll('.lscreen').forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
+      const el = document.getElementById('ls' + n);
+      el.style.display = n === 3 ? 'flex' : 'block';
+      el.classList.add('active');
+    }
+
+    function selectLearnLang(el) {
+      document.querySelectorAll('#ls1 .lsetup-opt').forEach(o => o.classList.remove('sel'));
+      el.classList.add('sel');
+      learnLang = el.dataset.lang;
+      const btn = document.getElementById('ls1next');
+      btn.disabled = false; btn.style.opacity = '1';
+    }
+
+    function selectLearnLvl(el) {
+      document.querySelectorAll('#ls2 .lsetup-opt').forEach(o => o.classList.remove('sel'));
+      el.classList.add('sel');
+      learnLevel = el.dataset.lvl;
+      const btn = document.getElementById('ls2next');
+      btn.disabled = false; btn.style.opacity = '1';
+    }
+
+    function getProgress(lang) {
+      try { return JSON.parse(localStorage.getItem('clp_' + lang) || '{"done":[],"current":0}'); }
+      catch { return { done: [], current: 0 }; }
+    }
+
+    function saveProgress(lang, data) {
+      localStorage.setItem('clp_' + lang, JSON.stringify(data));
+    }
+
+    function openLearningPath() {
+      if (!learnLang || !learnLevel) return;
+      const meta = LANG_META[learnLang];
+      const curriculum = CURRICULUM[learnLang] || [];
+
+      // Set header badge
+      document.getElementById('lpathBadge').textContent = meta.icon + ' ' + meta.name;
+
+      // Determine starting node
+      let prog = getProgress(learnLang);
+      if (learnLevel === 'beginner' || learnLevel === 'some') {
+        // always start at beginning
+        prog = { done: [], current: 0 };
+        saveProgress(learnLang, prog);
+      }
+      // intermediate: keep existing progress, let them pick any unlocked node
+
+      renderPath(learnLang, curriculum, prog, learnLevel);
+      goLs(3);
+    }
+
+    function renderPath(lang, curriculum, prog, level) {
+      const container = document.getElementById('lpathContainer');
+      container.innerHTML = '';
+
+      const NODE = 68, VGAP = 118, AMP = 110;
+      const containerW = Math.min(container.parentElement.clientWidth - 40, 420);
+      const center = containerW / 2 - NODE / 2;
+      const totalH = VGAP * curriculum.length + 60;
+
+      container.style.width = containerW + 'px';
+      container.style.height = totalH + 'px';
+
+      // SVG connecting path
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('width', containerW);
+      svg.setAttribute('height', totalH);
+      svg.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none';
+
+      let d = '';
+      for (let i = 0; i < curriculum.length; i++) {
+        const cx = center + NODE/2 + Math.round(Math.sin(i * Math.PI / 4) * AMP);
+        const cy = 20 + i * VGAP + NODE/2;
+        if (i === 0) { d += `M ${cx} ${cy}`; continue; }
+        const px = center + NODE/2 + Math.round(Math.sin((i-1) * Math.PI / 4) * AMP);
+        const py = 20 + (i-1) * VGAP + NODE/2;
+        const mcy = (py + cy) / 2;
+        d += ` C ${px} ${mcy}, ${cx} ${mcy}, ${cx} ${cy}`;
+      }
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', 'rgba(99,102,241,0.18)');
+      path.setAttribute('stroke-width', '5');
+      path.setAttribute('stroke-dasharray', '10 7');
+      svg.appendChild(path);
+      container.appendChild(svg);
+
+      // Update progress bar
+      const pct = curriculum.length ? Math.round(prog.done.length / curriculum.length * 100) : 0;
+      document.getElementById('lpathFill').style.width = pct + '%';
+      document.getElementById('lpathPct').textContent = pct + '%';
+
+      // Nodes
+      for (let i = 0; i < curriculum.length; i++) {
+        const lesson = curriculum[i];
+        const nodeX = center + Math.round(Math.sin(i * Math.PI / 4) * AMP);
+        const nodeY = 20 + i * VGAP;
+        const isRight = nodeX > center;
+
+        let state;
+        if (prog.done.includes(i)) state = 'done';
+        else if (i === prog.current) state = 'current';
+        else if (level === 'intermediate') state = 'unlocked';
+        else if (i === prog.current + 1 && state !== 'done') state = 'unlocked';
+        else state = 'locked';
+
+        const wrap = document.createElement('div');
+        wrap.style.cssText = `position:absolute;left:${nodeX}px;top:${nodeY}px;width:${NODE}px;height:${NODE}px`;
+
+        const btn = document.createElement('button');
+        btn.className = `pnode-btn state-${state}`;
+        btn.innerHTML = state === 'done' ? '✓' : lesson.icon;
+        btn.title = lesson.title;
+        if (state !== 'locked') {
+          btn.onclick = () => startLesson(lang, i, lesson, prog);
+        }
+
+        const lbl = document.createElement('div');
+        lbl.className = 'pnode-label';
+        lbl.style[isRight ? 'right' : 'left'] = (NODE + 14) + 'px';
+        lbl.style.textAlign = isRight ? 'right' : 'left';
+        lbl.innerHTML = `<div class="nl-title">${lesson.title}</div><div class="nl-desc">${lesson.desc}</div>`;
+
+        wrap.appendChild(btn);
+        wrap.appendChild(lbl);
+        container.appendChild(wrap);
+      }
+    }
+
+    function startLesson(lang, index, lesson, prog) {
+      // Mark previous nodes as done
+      const newDone = [];
+      for (let i = 0; i < index; i++) newDone.push(i);
+      const newProg = { done: newDone, current: index };
+      saveProgress(lang, newProg);
+
+      closeLearnModal();
+      const levelStr = learnLevel === 'beginner' ? 'complete beginner' :
+                       learnLevel === 'some'      ? 'beginner with some basics' : 'intermediate learner';
+      const langName = LANG_META[lang].name;
+      const prompt = `Teach me "${lesson.title}" in ${langName}. I am a ${levelStr}. Give me a clear explanation with practical examples, then a small exercise to practice.`;
+      const input = document.getElementById('chatInput');
+      input.value = prompt;
+      document.getElementById('ai-chat').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => sendMessage(), 500);
+    }
+
+    // Close modal on background click
+    document.getElementById('learnModal').addEventListener('click', function(e) {
+      if (e.target === this) closeLearnModal();
+    });
+
   </script>
+
+<!-- Learning Path Modal -->
+<div class="learn-modal" id="learnModal">
+  <div class="learn-inner">
+    <button class="learn-close" onclick="closeLearnModal()">✕</button>
+
+    <!-- Screen 1: Pick language -->
+    <div class="lscreen active lsetup" id="ls1">
+      <div class="lsetup-title">Choose your language 💻</div>
+      <div class="lsetup-sub">Pick the language you want to master</div>
+      <div class="lsetup-grid">
+        <div class="lsetup-opt" data-lang="python" onclick="selectLearnLang(this)">
+          <div class="lo-icon">🐍</div><div class="lo-name">Python</div>
+          <div class="lo-desc">AI, data, games, automation</div>
+        </div>
+        <div class="lsetup-opt" data-lang="javascript" onclick="selectLearnLang(this)">
+          <div class="lo-icon">⚡</div><div class="lo-name">JavaScript</div>
+          <div class="lo-desc">Websites, apps, browser games</div>
+        </div>
+        <div class="lsetup-opt" data-lang="html" onclick="selectLearnLang(this)">
+          <div class="lo-icon">🎨</div><div class="lo-name">HTML & CSS</div>
+          <div class="lo-desc">Web design, see results instantly</div>
+        </div>
+        <div class="lsetup-opt" data-lang="java" onclick="selectLearnLang(this)">
+          <div class="lo-icon">☕</div><div class="lo-name">Java</div>
+          <div class="lo-desc">Android, enterprise software</div>
+        </div>
+        <div class="lsetup-opt" data-lang="cpp" onclick="selectLearnLang(this)">
+          <div class="lo-icon">⚙️</div><div class="lo-name">C++</div>
+          <div class="lo-desc">Game engines, high performance</div>
+        </div>
+        <div class="lsetup-opt" data-lang="sql" onclick="selectLearnLang(this)">
+          <div class="lo-icon">🗄️</div><div class="lo-name">SQL</div>
+          <div class="lo-desc">Databases, data analysis</div>
+        </div>
+        <div class="lsetup-opt" data-lang="rust" onclick="selectLearnLang(this)">
+          <div class="lo-icon">🦀</div><div class="lo-name">Rust</div>
+          <div class="lo-desc">Systems, ultra-fast, safe</div>
+        </div>
+      </div>
+      <div class="lsetup-nav">
+        <button class="btn-primary" id="ls1next" onclick="goLs(2)" disabled style="opacity:.4">Next →</button>
+      </div>
+    </div>
+
+    <!-- Screen 2: Pick level -->
+    <div class="lscreen lsetup" id="ls2">
+      <div class="lsetup-title">What's your level? 📊</div>
+      <div class="lsetup-sub">We'll place you at the right spot on the path</div>
+      <div class="lsetup-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="lsetup-opt" data-lvl="beginner" onclick="selectLearnLvl(this)">
+          <div class="lo-icon">🌱</div><div class="lo-name">Beginner</div>
+          <div class="lo-desc">Never written code — start from zero</div>
+        </div>
+        <div class="lsetup-opt" data-lvl="some" onclick="selectLearnLvl(this)">
+          <div class="lo-icon">📚</div><div class="lo-name">Some basics</div>
+          <div class="lo-desc">Know a little — still start from beginning</div>
+        </div>
+        <div class="lsetup-opt" data-lvl="intermediate" onclick="selectLearnLvl(this)">
+          <div class="lo-icon">⚡</div><div class="lo-name">Intermediate</div>
+          <div class="lo-desc">Have experience — pick where you stopped</div>
+        </div>
+      </div>
+      <div class="lsetup-nav">
+        <button class="btn-secondary" onclick="goLs(1)" style="padding:12px 24px">← Back</button>
+        <button class="btn-primary" id="ls2next" onclick="openLearningPath()" disabled style="opacity:.4">Start →</button>
+      </div>
+    </div>
+
+    <!-- Screen 3: The path -->
+    <div class="lscreen" id="ls3" style="display:none;flex-direction:column;height:100%">
+      <div class="lpath-header">
+        <div class="lpath-lang-badge" id="lpathBadge">🐍 Python</div>
+        <div class="lpath-progress-bar"><div class="lpath-progress-fill" id="lpathFill" style="width:0%"></div></div>
+        <div class="lpath-pct" id="lpathPct">0%</div>
+        <button class="btn-secondary" onclick="goLs(1)" style="padding:8px 14px;font-size:0.8rem;white-space:nowrap">Change</button>
+      </div>
+      <div class="lpath-scroll">
+        <div class="lpath-container" id="lpathContainer"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

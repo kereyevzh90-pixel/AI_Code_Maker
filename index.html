@@ -282,6 +282,24 @@
     .pnode-label .nl-title { font-size: 0.78rem; font-weight: 700; color: #e0e0e0; margin-bottom: 2px; }
     .pnode-label .nl-desc { font-size: 0.68rem; color: #6b7280; line-height: 1.35; }
 
+    /* Download cards */
+    .dl-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 22px 14px 18px; text-align: center;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .dl-card:hover { border-color: rgba(99,102,241,0.45); background: rgba(99,102,241,0.07); transform: translateY(-4px); }
+    .dl-icon { font-size: 2.2rem; margin-bottom: 10px; }
+    .dl-name { font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
+    .dl-ver { font-size: 0.72rem; color: #6b7280; margin-bottom: 14px; }
+    .dl-btn {
+      display: inline-block; background: linear-gradient(135deg,#6366f1,#a855f7);
+      color: #fff; font-size: 0.78rem; font-weight: 700;
+      padding: 7px 16px; border-radius: 8px; letter-spacing: 0.02em;
+    }
+    .dl-card:hover .dl-btn { opacity: 0.9; }
+
     /* Lesson screen */
     .llesson-header {
       padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -1008,6 +1026,87 @@
         <h4>Kotlin</h4>
         <p>Android apps</p>
       </div>
+    </div>
+  </section>
+
+  <!-- Downloads -->
+  <section style="position:relative;z-index:10;max-width:1000px;margin:0 auto 80px;padding:0 20px;">
+    <h2 class="section-title">Download <span>& Install</span></h2>
+    <p class="section-sub">Get the official runtime for your language — one click to the latest version</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:36px;">
+
+      <a href="https://www.python.org/downloads/" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="dl-card">
+          <div class="dl-icon">🐍</div>
+          <div class="dl-name">Python</div>
+          <div class="dl-ver">python.org</div>
+          <div class="dl-btn">⬇ Download</div>
+        </div>
+      </a>
+
+      <a href="https://nodejs.org/en/download" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="dl-card">
+          <div class="dl-icon">⚡</div>
+          <div class="dl-name">Node.js</div>
+          <div class="dl-ver">for JavaScript</div>
+          <div class="dl-btn">⬇ Download</div>
+        </div>
+      </a>
+
+      <a href="https://www.java.com/download/" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="dl-card">
+          <div class="dl-icon">☕</div>
+          <div class="dl-name">Java</div>
+          <div class="dl-ver">java.com</div>
+          <div class="dl-btn">⬇ Download</div>
+        </div>
+      </a>
+
+      <a href="https://code.visualstudio.com/download" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="dl-card">
+          <div class="dl-icon">⚙️</div>
+          <div class="dl-name">VS Code</div>
+          <div class="dl-ver">best editor</div>
+          <div class="dl-btn">⬇ Download</div>
+        </div>
+      </a>
+
+      <a href="https://www.rust-lang.org/tools/install" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="dl-card">
+          <div class="dl-icon">🦀</div>
+          <div class="dl-name">Rust</div>
+          <div class="dl-ver">rust-lang.org</div>
+          <div class="dl-btn">⬇ Download</div>
+        </div>
+      </a>
+
+      <a href="https://go.dev/dl/" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="dl-card">
+          <div class="dl-icon">🐹</div>
+          <div class="dl-name">Go</div>
+          <div class="dl-ver">go.dev</div>
+          <div class="dl-btn">⬇ Download</div>
+        </div>
+      </a>
+
+      <a href="https://www.mysql.com/downloads/" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="dl-card">
+          <div class="dl-icon">🗄️</div>
+          <div class="dl-name">MySQL</div>
+          <div class="dl-ver">for SQL</div>
+          <div class="dl-btn">⬇ Download</div>
+        </div>
+      </a>
+
+      <a href="https://git-scm.com/downloads" target="_blank" rel="noopener" style="text-decoration:none">
+        <div class="dl-card">
+          <div class="dl-icon">🔀</div>
+          <div class="dl-name">Git</div>
+          <div class="dl-ver">version control</div>
+          <div class="dl-btn">⬇ Download</div>
+        </div>
+      </a>
+
     </div>
   </section>
 
